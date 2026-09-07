@@ -394,7 +394,9 @@ body {
 .timelapse-marker {
     fill: #f7b92e;
 
-    stroke: none;
+    stroke: #ffffff;
+
+    stroke-width: 1.5;
 
     vector-effect:
         non-scaling-stroke;
@@ -469,7 +471,9 @@ body {
 .timelapse-inset-dot {
     fill: #f7b92e;
 
-    stroke: none;
+    stroke: #ffffff;
+
+    stroke-width: 1.5;
 
     vector-effect:
         non-scaling-stroke;
