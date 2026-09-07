@@ -1,0 +1,302 @@
+[
+    {
+        "id": "oakland-ed-fund",
+        "name": "Oakland Ed Fund",
+        "city": "Oakland",
+        "state": "CA",
+        "country": "US",
+        "latitude": 37.8044,
+        "longitude": -122.2712,
+        "peopleServed": 24000
+    },
+    {
+        "id": "san-francisco-youth-alliance",
+        "name": "San Francisco Youth Alliance",
+        "city": "San Francisco",
+        "state": "CA",
+        "country": "US",
+        "latitude": 37.7749,
+        "longitude": -122.4194,
+        "peopleServed": 18500
+    },
+    {
+        "id": "los-angeles-community-network",
+        "name": "Los Angeles Community Network",
+        "city": "Los Angeles",
+        "state": "CA",
+        "country": "US",
+        "latitude": 34.0522,
+        "longitude": -118.2437,
+        "peopleServed": 42000
+    },
+    {
+        "id": "san-diego-family-project",
+        "name": "San Diego Family Project",
+        "city": "San Diego",
+        "state": "CA",
+        "country": "US",
+        "latitude": 32.7157,
+        "longitude": -117.1611,
+        "peopleServed": 9800
+    },
+    {
+        "id": "seattle-learning-network",
+        "name": "Seattle Learning Network",
+        "city": "Seattle",
+        "state": "WA",
+        "country": "US",
+        "latitude": 47.6062,
+        "longitude": -122.3321,
+        "peopleServed": 12700
+    },
+    {
+        "id": "portland-community-fund",
+        "name": "Portland Community Fund",
+        "city": "Portland",
+        "state": "OR",
+        "country": "US",
+        "latitude": 45.5152,
+        "longitude": -122.6784,
+        "peopleServed": null
+    },
+    {
+        "id": "denver-youth-initiative",
+        "name": "Denver Youth Initiative",
+        "city": "Denver",
+        "state": "CO",
+        "country": "US",
+        "latitude": 39.7392,
+        "longitude": -104.9903,
+        "peopleServed": 15200
+    },
+    {
+        "id": "phoenix-impact-partners",
+        "name": "Phoenix Impact Partners",
+        "city": "Phoenix",
+        "state": "AZ",
+        "country": "US",
+        "latitude": 33.4484,
+        "longitude": -112.074,
+        "peopleServed": 17300
+    },
+    {
+        "id": "austin-youth-network",
+        "name": "Austin Youth Network",
+        "city": "Austin",
+        "state": "TX",
+        "country": "US",
+        "latitude": 30.2672,
+        "longitude": -97.7431,
+        "peopleServed": 8500
+    },
+    {
+        "id": "dallas-community-foundation",
+        "name": "Dallas Community Foundation",
+        "city": "Dallas",
+        "state": "TX",
+        "country": "US",
+        "latitude": 32.7767,
+        "longitude": -96.797,
+        "peopleServed": 26500
+    },
+    {
+        "id": "houston-neighborhood-alliance",
+        "name": "Houston Neighborhood Alliance",
+        "city": "Houston",
+        "state": "TX",
+        "country": "US",
+        "latitude": 29.7604,
+        "longitude": -95.3698,
+        "peopleServed": 39000
+    },
+    {
+        "id": "minneapolis-family-services",
+        "name": "Minneapolis Family Services",
+        "city": "Minneapolis",
+        "state": "MN",
+        "country": "US",
+        "latitude": 44.9778,
+        "longitude": -93.265,
+        "peopleServed": 10900
+    },
+    {
+        "id": "chicago-community-partners",
+        "name": "Chicago Community Partners",
+        "city": "Chicago",
+        "state": "IL",
+        "country": "US",
+        "latitude": 41.8781,
+        "longitude": -87.6298,
+        "peopleServed": 14500
+    },
+    {
+        "id": "detroit-class-act",
+        "name": "Detroit Class Act",
+        "city": "Detroit",
+        "state": "MI",
+        "country": "US",
+        "latitude": 42.3314,
+        "longitude": -83.0458,
+        "peopleServed": 6200
+    },
+    {
+        "id": "columbus-education-network",
+        "name": "Columbus Education Network",
+        "city": "Columbus",
+        "state": "OH",
+        "country": "US",
+        "latitude": 39.9612,
+        "longitude": -82.9988,
+        "peopleServed": 11800
+    },
+    {
+        "id": "nashville-community-project",
+        "name": "Nashville Community Project",
+        "city": "Nashville",
+        "state": "TN",
+        "country": "US",
+        "latitude": 36.1627,
+        "longitude": -86.7816,
+        "peopleServed": 7600
+    },
+    {
+        "id": "atlanta-impact-center",
+        "name": "Atlanta Impact Center",
+        "city": "Atlanta",
+        "state": "GA",
+        "country": "US",
+        "latitude": 33.749,
+        "longitude": -84.388,
+        "peopleServed": 22400
+    },
+    {
+        "id": "miami-family-network",
+        "name": "Miami Family Network",
+        "city": "Miami",
+        "state": "FL",
+        "country": "US",
+        "latitude": 25.7617,
+        "longitude": -80.1918,
+        "peopleServed": 15800
+    },
+    {
+        "id": "charlotte-community-alliance",
+        "name": "Charlotte Community Alliance",
+        "city": "Charlotte",
+        "state": "NC",
+        "country": "US",
+        "latitude": 35.2271,
+        "longitude": -80.8431,
+        "peopleServed": null
+    },
+    {
+        "id": "washington-youth-fund",
+        "name": "Washington Youth Fund",
+        "city": "Washington",
+        "state": "DC",
+        "country": "US",
+        "latitude": 38.9072,
+        "longitude": -77.0369,
+        "peopleServed": 19800
+    },
+    {
+        "id": "baltimore-neighborhood-project",
+        "name": "Baltimore Neighborhood Project",
+        "city": "Baltimore",
+        "state": "MD",
+        "country": "US",
+        "latitude": 39.2904,
+        "longitude": -76.6122,
+        "peopleServed": 13200
+    },
+    {
+        "id": "philadelphia-impact-alliance",
+        "name": "Philadelphia Impact Alliance",
+        "city": "Philadelphia",
+        "state": "PA",
+        "country": "US",
+        "latitude": 39.9526,
+        "longitude": -75.1652,
+        "peopleServed": 28600
+    },
+    {
+        "id": "newark-family-partners",
+        "name": "Newark Family Partners",
+        "city": "Newark",
+        "state": "NJ",
+        "country": "US",
+        "latitude": 40.7357,
+        "longitude": -74.1724,
+        "peopleServed": 9100
+    },
+    {
+        "id": "new-york-impact-alliance",
+        "name": "New York Impact Alliance",
+        "city": "New York",
+        "state": "NY",
+        "country": "US",
+        "latitude": 40.7128,
+        "longitude": -74.006,
+        "peopleServed": 32000
+    },
+    {
+        "id": "brooklyn-community-fund",
+        "name": "Brooklyn Community Fund",
+        "city": "Brooklyn",
+        "state": "NY",
+        "country": "US",
+        "latitude": 40.6782,
+        "longitude": -73.9442,
+        "peopleServed": 16700
+    },
+    {
+        "id": "boston-family-services",
+        "name": "Boston Family Services",
+        "city": "Boston",
+        "state": "MA",
+        "country": "US",
+        "latitude": 42.3601,
+        "longitude": -71.0589,
+        "peopleServed": 11200
+    },
+    {
+        "id": "providence-youth-network",
+        "name": "Providence Youth Network",
+        "city": "Providence",
+        "state": "RI",
+        "country": "US",
+        "latitude": 41.824,
+        "longitude": -71.4128,
+        "peopleServed": 6100
+    },
+    {
+        "id": "hartford-community-services",
+        "name": "Hartford Community Services",
+        "city": "Hartford",
+        "state": "CT",
+        "country": "US",
+        "latitude": 41.7658,
+        "longitude": -72.6734,
+        "peopleServed": 7300
+    },
+    {
+        "id": "pittsburgh-impact-project",
+        "name": "Pittsburgh Impact Project",
+        "city": "Pittsburgh",
+        "state": "PA",
+        "country": "US",
+        "latitude": 40.4406,
+        "longitude": -79.9959,
+        "peopleServed": 8900
+    },
+    {
+        "id": "st-louis-community-network",
+        "name": "St. Louis Community Network",
+        "city": "St. Louis",
+        "state": "MO",
+        "country": "US",
+        "latitude": 38.627,
+        "longitude": -90.1994,
+        "peopleServed": 12100
+    }
+]
