@@ -52,7 +52,10 @@ export function renderMap(
 
     const path = d3.geoPath(projection)
 
-    // Draw states
+    // ----------------------------------
+    // DRAW STATES
+    // ----------------------------------
+
     svg
         .append('g')
         .selectAll('path')
@@ -61,10 +64,16 @@ export function renderMap(
         .attr('d', path as any)
         .attr('class', 'state')
 
-    // Marker sizing
+    // ----------------------------------
+    // MARKER SIZING
+    // ----------------------------------
+
     const servedValues = customerData
         .map(customer => customer.peopleServed)
-        .filter((value): value is number => value !== null)
+        .filter(
+            (value): value is number =>
+                value !== null
+        )
 
     const radiusScale = d3
         .scaleSqrt()
@@ -75,7 +84,10 @@ export function renderMap(
         .range([5, 18])
         .clamp(true)
 
-    // Project customers to SVG coordinates
+    // ----------------------------------
+    // PROJECT CUSTOMER LOCATIONS
+    // ----------------------------------
+
     const projectedCustomers = customerData
         .map(customer => {
             const point = projection([
@@ -104,13 +116,23 @@ export function renderMap(
                 customer !== null
         )
 
-    function formatPeopleServed(value: number | null) {
+    // ----------------------------------
+    // FORMATTERS
+    // ----------------------------------
+
+    function formatPeopleServed(
+        value: number | null
+    ) {
         if (value === null) {
             return '—'
         }
 
         return value.toLocaleString('en-US')
     }
+
+    // ----------------------------------
+    // DETAILS
+    // ----------------------------------
 
     function renderEmptyDetails() {
         detailsContainer.innerHTML = ''
@@ -120,21 +142,173 @@ export function renderMap(
             'position-left',
             'position-right'
         )
+
+        detailsContainer.style.left = ''
+        detailsContainer.style.right = ''
+        detailsContainer.style.top = ''
     }
 
-    function positionDetails(x: number) {
-        detailsContainer.classList.add('is-visible')
+    function positionDetails(
+        x: number,
+        y: number,
+        anchorRadius: number
+    ) {
+        detailsContainer.classList.add(
+            'is-visible'
+        )
 
         detailsContainer.classList.remove(
             'position-left',
             'position-right'
         )
 
-        if (x > width * 0.68) {
-            detailsContainer.classList.add('position-left')
-        } else {
-            detailsContainer.classList.add('position-right')
+        // Tablet/mobile:
+        // card stays below map via CSS
+        if (
+            window.matchMedia(
+                '(max-width: 900px)'
+            ).matches
+        ) {
+            detailsContainer.style.left = ''
+            detailsContainer.style.right = ''
+            detailsContainer.style.top = ''
+
+            return
         }
+
+        const svgNode = svg.node()
+
+        if (!svgNode) {
+            return
+        }
+
+        const svgRect =
+            svgNode.getBoundingClientRect()
+
+        const mapRect =
+            container.getBoundingClientRect()
+
+        const offsetParent =
+            detailsContainer.offsetParent as HTMLElement | null
+
+        const parentRect =
+            offsetParent?.getBoundingClientRect()
+
+        if (!parentRect) {
+            return
+        }
+
+        const scaleX =
+            svgRect.width / width
+
+        const scaleY =
+            svgRect.height / height
+
+        const pointX =
+            svgRect.left -
+            parentRect.left +
+            x * scaleX
+
+        const pointY =
+            svgRect.top -
+            parentRect.top +
+            y * scaleY
+
+        const mapLeft =
+            mapRect.left -
+            parentRect.left
+
+        const mapRight =
+            mapRect.right -
+            parentRect.left
+
+        const mapTop =
+            mapRect.top -
+            parentRect.top
+
+        const mapBottom =
+            mapRect.bottom -
+            parentRect.top
+
+        const cardRect =
+            detailsContainer.getBoundingClientRect()
+
+        const cardWidth =
+            cardRect.width || 300
+
+        const cardHeight =
+            cardRect.height || 220
+
+        // Important:
+        // keep card spacing relative to actual
+        // visible marker / cluster radius
+        const baseGap = 14
+
+        const renderedRadius =
+            anchorRadius * scaleX
+
+        const horizontalGap =
+            renderedRadius + baseGap
+
+        const edgePadding = 16
+
+        const canFitRight =
+            pointX +
+            horizontalGap +
+            cardWidth <=
+            mapRight - edgePadding
+
+        const canFitLeft =
+            pointX -
+            horizontalGap -
+            cardWidth >=
+            mapLeft + edgePadding
+
+        let left: number
+
+        if (canFitRight) {
+            left =
+                pointX +
+                horizontalGap
+        } else if (canFitLeft) {
+            left =
+                pointX -
+                horizontalGap -
+                cardWidth
+        } else {
+            left = Math.max(
+                mapLeft + edgePadding,
+                Math.min(
+                    pointX - cardWidth / 2,
+                    mapRight -
+                    cardWidth -
+                    edgePadding
+                )
+            )
+        }
+
+        let top =
+            pointY -
+            cardHeight / 2
+
+        top = Math.max(
+            mapTop + edgePadding,
+            Math.min(
+                top,
+                mapBottom -
+                cardHeight -
+                edgePadding
+            )
+        )
+
+        detailsContainer.style.left =
+            `${left}px`
+
+        detailsContainer.style.right =
+            'auto'
+
+        detailsContainer.style.top =
+            `${top}px`
     }
 
     function renderCustomerDetails(
@@ -168,7 +342,9 @@ export function renderMap(
 
         <div class="details-impact">
           <strong>
-            ${formatPeopleServed(customer.peopleServed)}
+            ${formatPeopleServed(
+            customer.peopleServed
+        )}
           </strong>
 
           <span>
@@ -179,8 +355,13 @@ export function renderMap(
     `
 
         detailsContainer
-            .querySelector<HTMLButtonElement>('.details-close')
-            ?.addEventListener('click', clearSelection)
+            .querySelector<HTMLButtonElement>(
+                '.details-close'
+            )
+            ?.addEventListener(
+                'click',
+                clearSelection
+            )
     }
 
     function renderClusterDetails(
@@ -188,30 +369,39 @@ export function renderMap(
     ) {
         const totalPeopleServed = d3.sum(
             cluster.customers,
-            customer => customer.peopleServed ?? 0
+            customer =>
+                customer.peopleServed ?? 0
         )
 
-        const customerRows = cluster.customers
-            .map(customer => {
-                return `
-          <button
-            type="button"
-            class="cluster-customer"
-            data-customer-id="${customer.id}"
-          >
-            <span class="cluster-customer-name">
-              ${customer.name}
-            </span>
+        const customerRows =
+            cluster.customers
+                .map(customer => {
+                    return `
+            <button
+              type="button"
+              class="cluster-customer"
+              data-customer-id="${customer.id}"
+            >
+              <span
+                class="cluster-customer-name"
+              >
+                ${customer.name}
+              </span>
 
-            <span class="cluster-customer-meta">
-              ${customer.city}, ${customer.state}
-              ·
-              ${formatPeopleServed(customer.peopleServed)}
-            </span>
-          </button>
-        `
-            })
-            .join('')
+              <span
+                class="cluster-customer-meta"
+              >
+                ${customer.city},
+                ${customer.state}
+                ·
+                ${formatPeopleServed(
+                        customer.peopleServed
+                    )}
+              </span>
+            </button>
+          `
+                })
+                .join('')
 
         detailsContainer.innerHTML = `
       <div class="details-card">
@@ -222,7 +412,8 @@ export function renderMap(
             </p>
 
             <h2>
-              ${cluster.customers.length} customers nearby
+              ${cluster.customers.length}
+              customers nearby
             </h2>
           </div>
 
@@ -237,7 +428,9 @@ export function renderMap(
 
         <div class="cluster-summary">
           <strong>
-            ${totalPeopleServed.toLocaleString('en-US')}
+            ${totalPeopleServed.toLocaleString(
+            'en-US'
+        )}
           </strong>
 
           <span>
@@ -252,73 +445,105 @@ export function renderMap(
     `
 
         detailsContainer
-            .querySelector<HTMLButtonElement>('.details-close')
-            ?.addEventListener('click', clearSelection)
+            .querySelector<HTMLButtonElement>(
+                '.details-close'
+            )
+            ?.addEventListener(
+                'click',
+                clearSelection
+            )
 
         detailsContainer
             .querySelectorAll<HTMLButtonElement>(
                 '.cluster-customer'
             )
             .forEach(button => {
-                button.addEventListener('click', () => {
-                    const customerId =
-                        button.dataset.customerId
+                button.addEventListener(
+                    'click',
+                    () => {
+                        const customerId =
+                            button.dataset.customerId
 
-                    const customer =
-                        projectedCustomers.find(
-                            item => item.id === customerId
-                        )
+                        const customer =
+                            projectedCustomers.find(
+                                item =>
+                                    item.id ===
+                                    customerId
+                            )
 
-                    if (customer) {
-                        selectCustomer(customer)
+                        if (customer) {
+                            selectCustomer(customer)
+                        }
                     }
-                })
+                )
             })
     }
 
-    // Cluster around a fixed seed/center.
-    // Avoids transitive chaining into giant clusters.
+    // ----------------------------------
+    // CLUSTERING
+    // ----------------------------------
+
     function buildClusters(
         customers: ProjectedCustomer[],
         minimumGap = 10,
         maxClusterRadius = 52
     ): CustomerCluster[] {
         const unassigned = [...customers]
-        const clusters: CustomerCluster[] = []
 
-        while (unassigned.length > 0) {
-            const seed = unassigned.shift()
+        const clusters:
+            CustomerCluster[] = []
+
+        while (
+            unassigned.length > 0
+        ) {
+            const seed =
+                unassigned.shift()
 
             if (!seed) {
                 break
             }
 
-            const groupedCustomers: ProjectedCustomer[] = [seed]
+            const groupedCustomers:
+                ProjectedCustomer[] = [
+                    seed
+                ]
 
             for (
-                let i = unassigned.length - 1;
+                let i =
+                    unassigned.length - 1;
                 i >= 0;
                 i--
             ) {
-                const candidate = unassigned[i]
+                const candidate =
+                    unassigned[i]
 
-                const distanceFromSeed = Math.hypot(
-                    seed.x - candidate.x,
-                    seed.y - candidate.y
-                )
+                const distanceFromSeed =
+                    Math.hypot(
+                        seed.x -
+                        candidate.x,
+                        seed.y -
+                        candidate.y
+                    )
 
                 const overlapDistance =
                     seed.radius +
                     candidate.radius +
                     minimumGap
 
-                const allowedDistance = Math.min(
-                    overlapDistance,
-                    maxClusterRadius
-                )
+                const allowedDistance =
+                    Math.min(
+                        overlapDistance,
+                        maxClusterRadius
+                    )
 
-                if (distanceFromSeed <= allowedDistance) {
-                    groupedCustomers.push(candidate)
+                if (
+                    distanceFromSeed <=
+                    allowedDistance
+                ) {
+                    groupedCustomers.push(
+                        candidate
+                    )
+
                     unassigned.splice(i, 1)
                 }
             }
@@ -326,60 +551,103 @@ export function renderMap(
             const x =
                 d3.mean(
                     groupedCustomers,
-                    customer => customer.x
+                    customer =>
+                        customer.x
                 ) ?? seed.x
 
             const y =
                 d3.mean(
                     groupedCustomers,
-                    customer => customer.y
+                    customer =>
+                        customer.y
                 ) ?? seed.y
 
             clusters.push({
                 id: groupedCustomers
-                    .map(customer => customer.id)
+                    .map(
+                        customer =>
+                            customer.id
+                    )
                     .sort()
                     .join('--'),
 
                 x,
                 y,
 
-                customers: groupedCustomers
+                customers:
+                    groupedCustomers
             })
         }
 
         return clusters
     }
 
+    function getClusterRadius(
+        cluster: CustomerCluster
+    ) {
+        return (
+            18 +
+            Math.min(
+                cluster.customers.length,
+                5
+            ) * 2
+        )
+    }
+
     const clusters =
-        buildClusters(projectedCustomers)
-
-    const singleCustomers = clusters
-        .filter(
-            cluster =>
-                cluster.customers.length === 1
-        )
-        .map(
-            cluster =>
-                cluster.customers[0]
+        buildClusters(
+            projectedCustomers
         )
 
-    const multiCustomerClusters = clusters.filter(
-        cluster =>
-            cluster.customers.length > 1
-    )
+    const singleCustomers =
+        clusters
+            .filter(
+                cluster =>
+                    cluster.customers
+                        .length === 1
+            )
+            .map(
+                cluster =>
+                    cluster.customers[0]
+            )
 
-    // Individual customer markers
+    const multiCustomerClusters =
+        clusters.filter(
+            cluster =>
+                cluster.customers
+                    .length > 1
+        )
+
+    // ----------------------------------
+    // INDIVIDUAL MARKERS
+    // ----------------------------------
+
     const markers = svg
         .append('g')
-        .attr('class', 'customer-markers')
+        .attr(
+            'class',
+            'customer-markers'
+        )
         .selectAll('circle')
         .data(singleCustomers)
         .join('circle')
-        .attr('class', 'customer-marker')
-        .attr('cx', customer => customer.x)
-        .attr('cy', customer => customer.y)
-        .attr('r', customer => customer.radius)
+        .attr(
+            'class',
+            'customer-marker'
+        )
+        .attr(
+            'cx',
+            customer => customer.x
+        )
+        .attr(
+            'cy',
+            customer => customer.y
+        )
+        .attr(
+            'r',
+            customer =>
+                customer.radius
+        )
         .attr('tabindex', 0)
         .attr('role', 'button')
         .attr(
@@ -388,14 +656,25 @@ export function renderMap(
                 `${customer.name}, ${customer.city}, ${customer.state}`
         )
 
-    // Multi-customer clusters
+    // ----------------------------------
+    // CLUSTER MARKERS
+    // ----------------------------------
+
     const clusterGroups = svg
         .append('g')
-        .attr('class', 'customer-clusters')
+        .attr(
+            'class',
+            'customer-clusters'
+        )
         .selectAll('g')
-        .data(multiCustomerClusters)
+        .data(
+            multiCustomerClusters
+        )
         .join('g')
-        .attr('class', 'customer-cluster')
+        .attr(
+            'class',
+            'customer-cluster'
+        )
         .attr(
             'transform',
             cluster =>
@@ -411,60 +690,92 @@ export function renderMap(
 
     clusterGroups
         .append('circle')
-        .attr('class', 'cluster-circle')
+        .attr(
+            'class',
+            'cluster-circle'
+        )
         .attr(
             'r',
             cluster =>
-                18 +
-                Math.min(
-                    cluster.customers.length,
-                    5
-                ) * 2
+                getClusterRadius(cluster)
         )
 
     clusterGroups
         .append('text')
-        .attr('class', 'cluster-count')
-        .attr('text-anchor', 'middle')
-        .attr('dominant-baseline', 'central')
+        .attr(
+            'class',
+            'cluster-count'
+        )
+        .attr(
+            'text-anchor',
+            'middle'
+        )
+        .attr(
+            'dominant-baseline',
+            'central'
+        )
         .text(
             cluster =>
                 cluster.customers.length
         )
 
+    // ----------------------------------
+    // SELECTION
+    // ----------------------------------
+
     function updateSelection() {
         markers.classed(
             'is-selected',
             customer =>
-                customer.id === selectedCustomerId
+                customer.id ===
+                selectedCustomerId
         )
 
         clusterGroups.classed(
             'is-selected',
             cluster =>
-                cluster.id === selectedClusterId
+                cluster.id ===
+                selectedClusterId
         )
     }
 
     function selectCustomer(
         customer: ProjectedCustomer
     ) {
-        selectedCustomerId = customer.id
+        selectedCustomerId =
+            customer.id
+
         selectedClusterId = null
 
-        renderCustomerDetails(customer)
-        positionDetails(customer.x)
+        renderCustomerDetails(
+            customer
+        )
+
+        positionDetails(
+            customer.x,
+            customer.y,
+            customer.radius
+        )
+
         updateSelection()
     }
 
     function selectCluster(
         cluster: CustomerCluster
     ) {
-        selectedClusterId = cluster.id
+        selectedClusterId =
+            cluster.id
+
         selectedCustomerId = null
 
         renderClusterDetails(cluster)
-        positionDetails(cluster.x)
+
+        positionDetails(
+            cluster.x,
+            cluster.y,
+            getClusterRadius(cluster)
+        )
+
         updateSelection()
     }
 
@@ -476,35 +787,53 @@ export function renderMap(
         updateSelection()
     }
 
+    // ----------------------------------
+    // EVENTS
+    // ----------------------------------
+
     markers
-        .on('click', (_, customer) => {
-            selectCustomer(customer)
-        })
+        .on(
+            'click',
+            (_, customer) => {
+                selectCustomer(
+                    customer
+                )
+            }
+        )
         .on(
             'keydown',
             (event, customer) => {
                 if (
-                    event.key === 'Enter' ||
+                    event.key ===
+                    'Enter' ||
                     event.key === ' '
                 ) {
                     event.preventDefault()
-                    selectCustomer(customer)
+
+                    selectCustomer(
+                        customer
+                    )
                 }
             }
         )
 
     clusterGroups
-        .on('click', (_, cluster) => {
-            selectCluster(cluster)
-        })
+        .on(
+            'click',
+            (_, cluster) => {
+                selectCluster(cluster)
+            }
+        )
         .on(
             'keydown',
             (event, cluster) => {
                 if (
-                    event.key === 'Enter' ||
+                    event.key ===
+                    'Enter' ||
                     event.key === ' '
                 ) {
                     event.preventDefault()
+
                     selectCluster(cluster)
                 }
             }
