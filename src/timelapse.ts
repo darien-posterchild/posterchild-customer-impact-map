@@ -14,23 +14,6 @@ import {
 
 
 // ----------------------------------
-// NUMBER FORMATTING
-// ----------------------------------
-
-function formatCompactNumber(
-  value: number
-) {
-  return new Intl.NumberFormat(
-    'en-US',
-    {
-      notation: 'compact',
-      maximumFractionDigits: 1
-    }
-  ).format(value)
-}
-
-
-// ----------------------------------
 // PAGE
 // ----------------------------------
 
@@ -61,87 +44,90 @@ document
       </div>
 
       <div class="timelapse-data-label">
-        Prototype data
+        Real customer data
       </div>
 
     </header>
 
 
     <section
-      class="timelapse-stats"
-      aria-label="Impact totals"
-    >
-
-      <div class="timelapse-stat">
-
-        <strong
-          id="nonprofit-count"
-        >
-          0
-        </strong>
-
-        <span>
-          nonprofits
-        </span>
-
-      </div>
-
-
-      <div class="timelapse-stat">
-
-        <strong
-          id="people-served"
-        >
-          0
-        </strong>
-
-        <span>
-          people served
-        </span>
-
-      </div>
-
-    </section>
-
-
-    <section
-      class="timeline-section"
-      aria-label="Customer growth timeline"
+      class="impact-timeline-row"
+      aria-label="Customer impact over time"
     >
 
       <div
-        class="timeline-quarter"
-        id="timeline-quarter"
+        class="timelapse-stats"
+        aria-label="Impact totals"
       >
-        —
+
+        <div class="timelapse-stat">
+
+          <strong
+            id="nonprofit-count"
+          >
+            0
+          </strong>
+
+          <span>
+            nonprofits
+          </span>
+
+        </div>
+
+
+        <div class="timelapse-stat timelapse-stat-community">
+
+          <strong
+            class="community-reach-title"
+          >
+            Community reach
+          </strong>
+
+          <span>
+            Small · Large · Huge
+          </span>
+
+        </div>
+
       </div>
 
-      <div class="timeline-track">
+
+      <div
+        class="timeline-section"
+        aria-label="Customer growth timeline"
+      >
 
         <div
-          class="timeline-progress"
-          id="timeline-progress"
-        ></div>
+          class="timeline-quarter"
+          id="timeline-quarter"
+        >
+          —
+        </div>
 
-      </div>
+        <div class="timeline-track">
 
-      <div class="timeline-years">
+          <div
+            class="timeline-progress"
+            id="timeline-progress"
+          ></div>
 
-        <span>
-          2023
-        </span>
+        </div>
 
-        <span>
-          2024
-        </span>
+        <div class="timeline-years">
 
-        <span>
-          2025
-        </span>
+          <span>
+            2024
+          </span>
 
-        <span>
-          2026
-        </span>
+          <span>
+            2025
+          </span>
+
+          <span>
+            2026
+          </span>
+
+        </div>
 
       </div>
 
@@ -159,13 +145,41 @@ document
 
         <div class="timelapse-legend">
 
-          <span
-            class="timelapse-legend-dot"
-          ></span>
+          <div
+            class="timelapse-legend-item"
+          >
+            <span
+              class="timelapse-legend-dot timelapse-legend-dot-small"
+            ></span>
 
-          <span>
-            Dot size ≈ people served
-          </span>
+            <span>
+              Small · 0–2K
+            </span>
+          </div>
+
+          <div
+            class="timelapse-legend-item"
+          >
+            <span
+              class="timelapse-legend-dot timelapse-legend-dot-large"
+            ></span>
+
+            <span>
+              Large · 2K–20K
+            </span>
+          </div>
+
+          <div
+            class="timelapse-legend-item"
+          >
+            <span
+              class="timelapse-legend-dot timelapse-legend-dot-huge"
+            ></span>
+
+            <span>
+              Huge · 20K+
+            </span>
+          </div>
 
         </div>
 
@@ -191,12 +205,7 @@ const nonprofitCount =
     '#nonprofit-count'
   )
 
-const peopleServed =
-  document.querySelector<HTMLElement>(
-    '#people-served'
-  )
-
-const quarterLabel =
+const monthLabel =
   document.querySelector<HTMLElement>(
     '#timeline-quarter'
   )
@@ -208,17 +217,12 @@ const progressBar =
 
 
 // ----------------------------------
-// SMOOTH COUNTERS
+// SMOOTH NONPROFIT COUNTER
 // ----------------------------------
 
 let targetNonprofits = 0
-let targetPeopleServed = 0
 
 let displayedNonprofits = 0
-let displayedPeopleServed = 0
-
-let previousTargetNonprofits = 0
-let previousTargetPeopleServed = 0
 
 let counterAnimationFrame:
   number | null = null
@@ -227,23 +231,7 @@ let previousFrameTime =
   performance.now()
 
 
-function triggerNumberMotion(
-  element: HTMLElement
-) {
-  element.classList.remove(
-    'is-changing'
-  )
-
-  // Restart CSS animation
-  void element.offsetWidth
-
-  element.classList.add(
-    'is-changing'
-  )
-}
-
-
-function animateCounters(
+function animateCounter(
   currentTime: number
 ) {
   const delta =
@@ -258,14 +246,10 @@ function animateCounters(
   previousFrameTime =
     currentTime
 
-  /*
-    Exponential smoothing.
 
-    Larger = faster response.
-    Smaller = slower / more cinematic.
-  */
+  const responseSpeed =
+    7
 
-  const responseSpeed = 7
 
   const smoothing =
     1 -
@@ -283,15 +267,6 @@ function animateCounters(
     smoothing
 
 
-  displayedPeopleServed +=
-    (
-      targetPeopleServed -
-      displayedPeopleServed
-    ) *
-    smoothing
-
-
-  // Snap when extremely close
   if (
     Math.abs(
       targetNonprofits -
@@ -300,17 +275,6 @@ function animateCounters(
   ) {
     displayedNonprofits =
       targetNonprofits
-  }
-
-
-  if (
-    Math.abs(
-      targetPeopleServed -
-      displayedPeopleServed
-    ) < 1
-  ) {
-    displayedPeopleServed =
-      targetPeopleServed
   }
 
 
@@ -324,27 +288,16 @@ function animateCounters(
   }
 
 
-  if (peopleServed) {
-    peopleServed.textContent =
-      formatCompactNumber(
-        Math.round(
-          displayedPeopleServed
-        )
-      )
-  }
-
-
   counterAnimationFrame =
     requestAnimationFrame(
-      animateCounters
+      animateCounter
     )
 }
 
 
-// Start number animation once
 counterAnimationFrame =
   requestAnimationFrame(
-    animateCounters
+    animateCounter
   )
 
 
@@ -355,8 +308,7 @@ counterAnimationFrame =
 if (
   mapContainer &&
   nonprofitCount &&
-  peopleServed &&
-  quarterLabel &&
+  monthLabel &&
   progressBar
 ) {
   renderTimelapseMap(
@@ -365,51 +317,19 @@ if (
       onFrame: frame => {
 
         // ----------------------------
-        // COUNTER TARGETS
+        // NONPROFIT COUNT
         // ----------------------------
 
         targetNonprofits =
           frame.nonprofitCount
 
-        targetPeopleServed =
-          frame.peopleServed
-
-
-        // Subtle visual motion only
-        // when the actual target changes.
-
-        if (
-          targetNonprofits !==
-          previousTargetNonprofits
-        ) {
-          triggerNumberMotion(
-            nonprofitCount
-          )
-
-          previousTargetNonprofits =
-            targetNonprofits
-        }
-
-
-        if (
-          targetPeopleServed !==
-          previousTargetPeopleServed
-        ) {
-          triggerNumberMotion(
-            peopleServed
-          )
-
-          previousTargetPeopleServed =
-            targetPeopleServed
-        }
-
 
         // ----------------------------
-        // QUARTER
+        // MONTH
         // ----------------------------
 
-        quarterLabel.textContent =
-          frame.quarter
+        monthLabel.textContent =
+          frame.month
 
 
         // ----------------------------
@@ -424,6 +344,7 @@ if (
               1
             )
           )
+
 
         progressBar.style.width =
           `${progress * 100}%`

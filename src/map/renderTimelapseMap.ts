@@ -1,6 +1,11 @@
 import * as d3 from 'd3'
-import { feature } from 'topojson-client'
+
+import {
+    feature
+} from 'topojson-client'
+
 import us from 'us-atlas/states-10m.json'
+
 import world from 'world-atlas/countries-110m.json'
 
 import {
@@ -8,16 +13,20 @@ import {
     type TimelapseCustomer
 } from '../data/timelapseCustomers'
 
+
 type TimelapseFrame = {
-    quarter: string
+    month: string
     nonprofitCount: number
-    peopleServed: number
     progress: number
 }
 
+
 type RenderOptions = {
-    onFrame?: (frame: TimelapseFrame) => void
+    onFrame?: (
+        frame: TimelapseFrame
+    ) => void
 }
+
 
 type ProjectedCustomer =
     TimelapseCustomer & {
@@ -27,178 +36,167 @@ type ProjectedCustomer =
         revealProgress: number
     }
 
+
+function getRadius(
+    size: TimelapseCustomer['communitySize']
+) {
+    if (size === 'small') {
+        return 5
+    }
+
+    if (size === 'large') {
+        return 9
+    }
+
+    return 14
+}
+
+
+function monthLabel(
+    value: string
+) {
+    const [
+        year,
+        month
+    ] = value.split('-')
+
+    const date =
+        new Date(
+            Number(year),
+            Number(month) - 1,
+            1
+        )
+
+    return new Intl.DateTimeFormat(
+        'en-US',
+        {
+            month: 'short',
+            year: 'numeric'
+        }
+    ).format(date)
+}
+
+
 export function renderTimelapseMap(
     container: HTMLElement,
     options: RenderOptions = {}
 ) {
+    container.innerHTML = ''
+
     const width = 1200
     const height = 760
 
-    // Complete animation duration.
-    // Increase this for a slower timelapse.
-    const animationDuration = 18000
+    const animationDuration =
+        20000
 
-    const introDelay = 700
-    const finalHoldDuration = 3000
-    const restartDelay = 800
+    const introDelay =
+        700
 
-    let animationFrameId: number | null = null
+    const finalHoldDuration =
+        3000
+
+    const restartDelay =
+        800
+
+    let animationFrameId:
+        number | null = null
 
     let timeoutId:
-        ReturnType<typeof setTimeout> |
-        null = null
+        number | null = null
 
     let stopped = false
+
 
     // ----------------------------------
     // DATA
     // ----------------------------------
 
-    const customerData = [
-        ...timelapseCustomers
-    ].sort(
-        (a, b) =>
-            a.startQuarter.localeCompare(
-                b.startQuarter
+    const customerData =
+        [...timelapseCustomers]
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    a.startMonth.localeCompare(
+                        b.startMonth
+                    )
             )
-    )
 
-    const quarters = Array.from(
-        new Set(
-            customerData.map(
-                customer =>
-                    customer.startQuarter
+
+    const months =
+        Array.from(
+            new Set(
+                customerData.map(
+                    customer =>
+                        customer.startMonth
+                )
+            )
+        ).sort()
+
+
+    const monthIndexMap =
+        new Map(
+            months.map(
+                (
+                    month,
+                    index
+                ) => [
+                        month,
+                        index
+                    ]
             )
         )
-    ).sort()
 
-    const quarterIndexMap =
-        new Map<string, number>()
 
-    quarters.forEach(
-        (quarter, index) => {
-            quarterIndexMap.set(
-                quarter,
-                index
-            )
-        }
-    )
-
-    const customersByQuarter =
+    const customersByMonth =
         new Map<
             string,
             TimelapseCustomer[]
         >()
 
-    quarters.forEach(quarter => {
-        customersByQuarter.set(
-            quarter,
-            customerData.filter(
-                customer =>
-                    customer.startQuarter ===
-                    quarter
-            )
+
+    for (
+        const customer
+        of customerData
+    ) {
+        const existing =
+            customersByMonth.get(
+                customer.startMonth
+            ) ?? []
+
+        existing.push(
+            customer
         )
-    })
 
-    const servedValues =
-        customerData
-            .map(
-                customer =>
-                    customer.peopleServed
-            )
-            .filter(
-                (
-                    value
-                ): value is number =>
-                    value !== null
-            )
+        customersByMonth.set(
+            customer.startMonth,
+            existing
+        )
+    }
 
-    const radiusScale = d3
-        .scaleSqrt()
-        .domain([
-            0,
-            d3.max(servedValues) ?? 1
-        ])
-        .range([4, 12])
-        .clamp(true)
 
     // ----------------------------------
     // SVG
     // ----------------------------------
 
-    const svg = d3
-        .select(container)
-        .append('svg')
-        .attr(
-            'viewBox',
-            `0 0 ${width} ${height}`
-        )
-        .attr(
-            'width',
-            '100%'
-        )
-        .attr(
-            'role',
-            'img'
-        )
-        .attr(
-            'aria-label',
-            'Animated map showing PosterChild customer growth over time'
-        )
+    const svg =
+        d3
+            .select(container)
+            .append('svg')
+            .attr(
+                'viewBox',
+                `0 0 ${width} ${height}`
+            )
+            .attr(
+                'role',
+                'img'
+            )
+            .attr(
+                'aria-label',
+                'PosterChild customer impact map'
+            )
 
-    // ----------------------------------
-    // GEOGRAPHY
-    // ----------------------------------
-
-    const states = feature(
-        us as any,
-        (us as any).objects.states
-    ) as any
-
-    const worldCountries = feature(
-        world as any,
-        (world as any).objects.countries
-    ) as any
-
-    const boliviaFeature =
-        worldCountries.features.find(
-            (country: any) => {
-                const [lon, lat] =
-                    d3.geoCentroid(country)
-
-                return (
-                    lon >= -70 &&
-                    lon <= -56 &&
-                    lat >= -24 &&
-                    lat <= -8
-                )
-            }
-        )
-
-    // ----------------------------------
-    // US PROJECTION
-    // ----------------------------------
-
-    const usProjection = d3
-        .geoAlbersUsa()
-        .fitExtent(
-            [
-                [20, 20],
-                [
-                    width - 20,
-                    570
-                ]
-            ],
-            states
-        )
-
-    const usPath =
-        d3.geoPath(usProjection)
-
-    // ----------------------------------
-    // BACKGROUND
-    // ----------------------------------
 
     svg
         .append('rect')
@@ -206,23 +204,75 @@ export function renderTimelapseMap(
             'class',
             'timelapse-background'
         )
-        .attr('x', 0)
-        .attr('y', 0)
-        .attr('width', width)
-        .attr('height', height)
+        .attr(
+            'width',
+            width
+        )
+        .attr(
+            'height',
+            height
+        )
+
+
+    // ----------------------------------
+    // MAP DATA
+    // ----------------------------------
+
+    const states =
+        feature(
+            us as any,
+            (
+                us as any
+            ).objects.states
+        )
+
+
+    const countries =
+        feature(
+            world as any,
+            (
+                world as any
+            ).objects.countries
+        )
+
 
     // ----------------------------------
     // US MAP
     // ----------------------------------
 
+    const usProjection =
+        d3
+            .geoAlbersUsa()
+            .fitExtent(
+                [
+                    [
+                        20,
+                        20
+                    ],
+                    [
+                        width - 20,
+                        560
+                    ]
+                ],
+                states as any
+            )
+
+
+    const usPath =
+        d3
+            .geoPath(
+                usProjection
+            )
+
+
     svg
         .append('g')
-        .attr(
-            'class',
-            'timelapse-states'
-        )
         .selectAll('path')
-        .data(states.features)
+        .data(
+            (
+                states as any
+            ).features
+        )
         .join('path')
         .attr(
             'class',
@@ -233,187 +283,248 @@ export function renderTimelapseMap(
             usPath as any
         )
 
-    // ----------------------------------
-    // CUSTOMER GROUPS
-    // ----------------------------------
 
-    const usCustomers =
-        customerData.filter(
-            customer =>
-                customer.country === 'US'
-        )
+    const usPulseLayer =
+        svg
+            .append('g')
 
-    const boliviaCustomers =
-        customerData.filter(
-            customer =>
-                customer.country === 'BO'
-        )
+
+    const usMarkerLayer =
+        svg
+            .append('g')
+
 
     // ----------------------------------
-    // REVEAL TIMING
+    // INTERNATIONAL SECTION
     // ----------------------------------
 
-    function getRevealProgress(
-        customer: TimelapseCustomer
-    ) {
-        const quarterIndex =
-            quarterIndexMap.get(
-                customer.startQuarter
-            ) ?? 0
-
-        const quarterCustomers =
-            customersByQuarter.get(
-                customer.startQuarter
-            ) ?? []
-
-        const customerIndex =
-            quarterCustomers.findIndex(
-                item =>
-                    item.id === customer.id
-            )
-
-        const quarterStart =
-            quarterIndex /
-            quarters.length
-
-        const quarterLength =
-            1 /
-            quarters.length
-
-        const positionInsideQuarter =
-            quarterCustomers.length <= 1
-                ? 0.5
-                : (
-                    customerIndex + 1
-                ) /
-                (
-                    quarterCustomers.length +
-                    1
-                )
-
-        return Math.min(
-            quarterStart +
-            quarterLength *
-            positionInsideQuarter,
-            0.995
-        )
-    }
-
-    // ----------------------------------
-    // PROJECT US CUSTOMERS
-    // ----------------------------------
-
-    const projectedUsCustomers =
-        usCustomers
-            .map(customer => {
-                const point =
-                    usProjection([
-                        customer.longitude,
-                        customer.latitude
-                    ])
-
-                if (!point) {
-                    return null
-                }
-
-                return {
-                    ...customer,
-
-                    x: point[0],
-                    y: point[1],
-
-                    radius:
-                        customer.peopleServed ===
-                            null
-                            ? 4
-                            : radiusScale(
-                                customer.peopleServed
-                            ),
-
-                    revealProgress:
-                        getRevealProgress(
-                            customer
-                        )
-                }
-            })
-            .filter(
-                (
-                    customer
-                ): customer is ProjectedCustomer =>
-                    customer !== null
-            )
-
-    // ----------------------------------
-    // US LAYERS
-    // ----------------------------------
-
-    const pulseLayer =
+    const internationalGroup =
         svg
             .append('g')
             .attr(
                 'class',
-                'timelapse-pulses'
+                'timelapse-international'
             )
 
-    const markerLayer =
-        svg
+
+    internationalGroup
+        .append('text')
+        .attr(
+            'x',
+            width / 2
+        )
+        .attr(
+            'y',
+            595
+        )
+        .attr(
+            'text-anchor',
+            'middle'
+        )
+        .attr(
+            'class',
+            'timelapse-inset-eyebrow'
+        )
+        .text(
+            'International'
+        )
+
+
+    const canadaGroup =
+        internationalGroup
             .append('g')
-            .attr(
-                'class',
-                'timelapse-markers'
-            )
-
-    // ----------------------------------
-    // BOLIVIA MAP
-    // ----------------------------------
-
-    const insetWidth = 220
-    const insetHeight = 150
-
-    const insetX =
-        width / 2 -
-        insetWidth / 2
-
-    const insetY = 590
-
-    const insetGroup =
-        svg
-            .append('g')
-            .attr(
-                'class',
-                'timelapse-inset'
-            )
             .attr(
                 'transform',
-                `translate(${insetX}, ${insetY})`
+                'translate(390,610)'
             )
 
-    let boliviaProjection:
-        d3.GeoProjection |
-        null = null
+
+    const boliviaGroup =
+        internationalGroup
+            .append('g')
+            .attr(
+                'transform',
+                'translate(640,610)'
+            )
+
+
+    canadaGroup
+        .append('text')
+        .attr(
+            'x',
+            90
+        )
+        .attr(
+            'y',
+            18
+        )
+        .attr(
+            'text-anchor',
+            'middle'
+        )
+        .attr(
+            'class',
+            'timelapse-inset-title'
+        )
+        .text(
+            'Canada'
+        )
+
+
+    boliviaGroup
+        .append('text')
+        .attr(
+            'x',
+            90
+        )
+        .attr(
+            'y',
+            18
+        )
+        .attr(
+            'text-anchor',
+            'middle'
+        )
+        .attr(
+            'class',
+            'timelapse-inset-title'
+        )
+        .text(
+            'Bolivia'
+        )
+
+
+    const canadaFeature =
+        (
+            countries as any
+        ).features.find(
+            (
+                country: any
+            ) => {
+                const centroid =
+                    d3.geoCentroid(
+                        country
+                    )
+
+                const [
+                    longitude,
+                    latitude
+                ] = centroid
+
+                return (
+                    longitude >
+                    -142 &&
+                    longitude <
+                    -52 &&
+                    latitude >
+                    40 &&
+                    latitude <
+                    84
+                )
+            }
+        )
+
+
+    const boliviaFeature =
+        (
+            countries as any
+        ).features.find(
+            (
+                country: any
+            ) => {
+                const centroid =
+                    d3.geoCentroid(
+                        country
+                    )
+
+                const [
+                    longitude,
+                    latitude
+                ] = centroid
+
+                return (
+                    longitude >
+                    -70 &&
+                    longitude <
+                    -56 &&
+                    latitude >
+                    -24 &&
+                    latitude <
+                    -8
+                )
+            }
+        )
+
+
+    const canadaProjection =
+        d3
+            .geoMercator()
+
+    if (canadaFeature) {
+        canadaProjection.fitExtent(
+            [
+                [
+                    18,
+                    28
+                ],
+                [
+                    162,
+                    125
+                ]
+            ],
+            canadaFeature
+        )
+
+        const canadaPath =
+            d3.geoPath(
+                canadaProjection
+            )
+
+        canadaGroup
+            .append('path')
+            .datum(
+                canadaFeature
+            )
+            .attr(
+                'class',
+                'timelapse-inset-country'
+            )
+            .attr(
+                'd',
+                canadaPath as any
+            )
+    }
+
+
+    const boliviaProjection =
+        d3
+            .geoMercator()
 
     if (boliviaFeature) {
-        boliviaProjection = d3
-            .geoMercator()
-            .fitExtent(
+        boliviaProjection.fitExtent(
+            [
                 [
-                    [30, 22],
-                    [
-                        insetWidth - 30,
-                        insetHeight - 38
-                    ]
+                    28,
+                    30
                 ],
-                boliviaFeature
-            )
+                [
+                    152,
+                    125
+                ]
+            ],
+            boliviaFeature
+        )
 
         const boliviaPath =
             d3.geoPath(
                 boliviaProjection
             )
 
-        insetGroup
+        boliviaGroup
             .append('path')
-            .datum(boliviaFeature)
+            .datum(
+                boliviaFeature
+            )
             .attr(
                 'class',
                 'timelapse-inset-country'
@@ -424,135 +535,240 @@ export function renderTimelapseMap(
             )
     }
 
-    insetGroup
-        .append('text')
-        .attr(
-            'class',
-            'timelapse-inset-eyebrow'
-        )
-        .attr(
-            'x',
-            insetWidth / 2
-        )
-        .attr(
-            'y',
-            12
-        )
-        .attr(
-            'text-anchor',
-            'middle'
-        )
-        .text(
-            'International'
-        )
 
-    insetGroup
-        .append('text')
-        .attr(
-            'class',
-            'timelapse-inset-title'
-        )
-        .attr(
-            'x',
-            insetWidth / 2
-        )
-        .attr(
-            'y',
-            insetHeight - 8
-        )
-        .attr(
-            'text-anchor',
-            'middle'
-        )
-        .text(
-            'Bolivia'
-        )
-
-    const insetPulseLayer =
-        insetGroup
+    const canadaPulseLayer =
+        canadaGroup
             .append('g')
-            .attr(
-                'class',
-                'timelapse-inset-pulses'
-            )
 
-    const insetDotLayer =
-        insetGroup
+
+    const canadaMarkerLayer =
+        canadaGroup
             .append('g')
-            .attr(
-                'class',
-                'timelapse-inset-dots'
-            )
+
+
+    const boliviaPulseLayer =
+        boliviaGroup
+            .append('g')
+
+
+    const boliviaMarkerLayer =
+        boliviaGroup
+            .append('g')
+
 
     // ----------------------------------
-    // PROJECT BOLIVIA CUSTOMERS
+    // REVEAL PROGRESS
     // ----------------------------------
 
-    const projectedBoliviaCustomers =
-        boliviaCustomers
-            .map(customer => {
-                if (!boliviaProjection) {
-                    return null
-                }
+    function getRevealProgress(
+        customer: TimelapseCustomer
+    ) {
+        const monthIndex =
+            monthIndexMap.get(
+                customer.startMonth
+            ) ?? 0
 
-                const point =
-                    boliviaProjection([
+
+        const monthCustomers =
+            customersByMonth.get(
+                customer.startMonth
+            ) ?? []
+
+
+        const customerIndex =
+            monthCustomers.findIndex(
+                item =>
+                    item.id ===
+                    customer.id
+            )
+
+
+        const monthStart =
+            monthIndex /
+            months.length
+
+
+        const monthLength =
+            1 /
+            months.length
+
+
+        const positionInsideMonth =
+            monthCustomers.length <= 1
+                ? 0.5
+                : (
+                    customerIndex + 1
+                ) /
+                (
+                    monthCustomers.length +
+                    1
+                )
+
+
+        return Math.min(
+            monthStart +
+            monthLength *
+            positionInsideMonth,
+            0.995
+        )
+    }
+
+
+    // ----------------------------------
+    // PROJECT CUSTOMERS
+    // ----------------------------------
+
+    const projectedCustomers:
+        ProjectedCustomer[] = []
+
+
+    for (
+        const customer
+        of customerData
+    ) {
+        const radius =
+            getRadius(
+                customer.communitySize
+            )
+
+
+        if (
+            customer.country ===
+            'US'
+        ) {
+            const point =
+                usProjection(
+                    [
                         customer.longitude,
                         customer.latitude
-                    ])
+                    ]
+                )
 
-                if (!point) {
-                    return null
-                }
+            if (!point) {
+                continue
+            }
 
-                return {
+            projectedCustomers.push(
+                {
                     ...customer,
 
-                    x: point[0],
-                    y: point[1],
+                    x:
+                        point[0],
 
-                    radius:
-                        customer.peopleServed ===
-                            null
-                            ? 4
-                            : radiusScale(
-                                customer.peopleServed
-                            ),
+                    y:
+                        point[1],
+
+                    radius,
 
                     revealProgress:
                         getRevealProgress(
                             customer
                         )
                 }
-            })
-            .filter(
-                (
-                    customer
-                ): customer is ProjectedCustomer =>
-                    customer !== null
             )
 
-    const allProjectedCustomers = [
-        ...projectedUsCustomers,
-        ...projectedBoliviaCustomers
-    ]
+            continue
+        }
+
+
+        if (
+            customer.country ===
+            'CA'
+        ) {
+            const point =
+                canadaProjection(
+                    [
+                        customer.longitude,
+                        customer.latitude
+                    ]
+                )
+
+            if (!point) {
+                continue
+            }
+
+            projectedCustomers.push(
+                {
+                    ...customer,
+
+                    x:
+                        point[0],
+
+                    y:
+                        point[1],
+
+                    radius,
+
+                    revealProgress:
+                        getRevealProgress(
+                            customer
+                        )
+                }
+            )
+
+            continue
+        }
+
+
+        if (
+            customer.country ===
+            'BO'
+        ) {
+            const point =
+                boliviaProjection(
+                    [
+                        customer.longitude,
+                        customer.latitude
+                    ]
+                )
+
+            if (!point) {
+                continue
+            }
+
+            projectedCustomers.push(
+                {
+                    ...customer,
+
+                    x:
+                        point[0],
+
+                    y:
+                        point[1],
+
+                    radius,
+
+                    revealProgress:
+                        getRevealProgress(
+                            customer
+                        )
+                }
+            )
+        }
+    }
+
 
     // ----------------------------------
-    // PULSE EFFECT
+    // PULSE
     // ----------------------------------
 
     function createPulse(
-        layer: d3.Selection<
-            SVGGElement,
-            unknown,
-            any,
-            any
-        >,
-        customer: ProjectedCustomer
+        layer:
+            d3.Selection<
+                SVGGElement,
+                unknown,
+                any,
+                any
+            >,
+
+        customer:
+            ProjectedCustomer
     ) {
         const pulse =
             layer
-                .append('circle')
+                .append(
+                    'circle'
+                )
                 .attr(
                     'class',
                     'timelapse-pulse'
@@ -567,28 +783,35 @@ export function renderTimelapseMap(
                 )
                 .attr(
                     'r',
-                    customer.radius + 2
+                    customer.radius +
+                    2
                 )
                 .attr(
                     'opacity',
                     0
                 )
 
+
         pulse
             .transition()
-            .duration(120)
+            .duration(
+                120
+            )
             .attr(
                 'opacity',
                 0.68
             )
             .transition()
-            .duration(900)
+            .duration(
+                900
+            )
             .ease(
                 d3.easeCubicOut
             )
             .attr(
                 'r',
-                customer.radius + 20
+                customer.radius +
+                20
             )
             .attr(
                 'opacity',
@@ -597,20 +820,41 @@ export function renderTimelapseMap(
             .remove()
     }
 
+
     // ----------------------------------
-    // ADD US MARKER
+    // MARKERS
     // ----------------------------------
 
-    function addUsMarker(
-        customer: ProjectedCustomer
+    function addMarker(
+        layer:
+            d3.Selection<
+                SVGGElement,
+                unknown,
+                any,
+                any
+            >,
+
+        pulseLayer:
+            d3.Selection<
+                SVGGElement,
+                unknown,
+                any,
+                any
+            >,
+
+        customer:
+            ProjectedCustomer
     ) {
         createPulse(
             pulseLayer,
             customer
         )
 
-        markerLayer
-            .append('circle')
+
+        layer
+            .append(
+                'circle'
+            )
             .attr(
                 'class',
                 'timelapse-marker'
@@ -632,7 +876,9 @@ export function renderTimelapseMap(
                 0
             )
             .transition()
-            .duration(500)
+            .duration(
+                500
+            )
             .ease(
                 d3.easeCubicOut
             )
@@ -646,133 +892,121 @@ export function renderTimelapseMap(
             )
     }
 
-    // ----------------------------------
-    // ADD BOLIVIA MARKER
-    // ----------------------------------
 
-    function addBoliviaMarker(
-        customer: ProjectedCustomer
+    function addCustomerMarker(
+        customer:
+            ProjectedCustomer
     ) {
-        createPulse(
-            insetPulseLayer,
-            customer
-        )
+        if (
+            customer.country ===
+            'US'
+        ) {
+            addMarker(
+                usMarkerLayer,
+                usPulseLayer,
+                customer
+            )
 
-        insetDotLayer
-            .append('circle')
-            .attr(
-                'class',
-                'timelapse-inset-dot'
+            return
+        }
+
+
+        if (
+            customer.country ===
+            'CA'
+        ) {
+            addMarker(
+                canadaMarkerLayer,
+                canadaPulseLayer,
+                customer
             )
-            .attr(
-                'cx',
-                customer.x
+
+            return
+        }
+
+
+        if (
+            customer.country ===
+            'BO'
+        ) {
+            addMarker(
+                boliviaMarkerLayer,
+                boliviaPulseLayer,
+                customer
             )
-            .attr(
-                'cy',
-                customer.y
-            )
-            .attr(
-                'r',
-                0
-            )
-            .attr(
-                'opacity',
-                0
-            )
-            .transition()
-            .duration(500)
-            .ease(
-                d3.easeCubicOut
-            )
-            .attr(
-                'r',
-                customer.radius
-            )
-            .attr(
-                'opacity',
-                0.92
-            )
+        }
     }
 
+
     // ----------------------------------
-    // REVEAL STATE
+    // FRAME STATE
     // ----------------------------------
 
     const revealedCustomerIds =
         new Set<string>()
 
+
     function revealCustomers(
         progress: number
     ) {
-        allProjectedCustomers.forEach(
-            customer => {
-                if (
-                    customer.revealProgress >
-                    progress
-                ) {
-                    return
-                }
+        for (
+            const customer
+            of projectedCustomers
+        ) {
+            if (
+                customer.revealProgress >
+                progress
+            ) {
+                continue
+            }
 
-                if (
-                    revealedCustomerIds.has(
-                        customer.id
-                    )
-                ) {
-                    return
-                }
 
-                revealedCustomerIds.add(
+            if (
+                revealedCustomerIds.has(
                     customer.id
                 )
-
-                if (
-                    customer.country === 'US'
-                ) {
-                    addUsMarker(
-                        customer
-                    )
-                }
-
-                if (
-                    customer.country === 'BO'
-                ) {
-                    addBoliviaMarker(
-                        customer
-                    )
-                }
+            ) {
+                continue
             }
-        )
+
+
+            revealedCustomerIds.add(
+                customer.id
+            )
+
+
+            addCustomerMarker(
+                customer
+            )
+        }
     }
 
-    // ----------------------------------
-    // CURRENT QUARTER
-    // ----------------------------------
 
-    function getCurrentQuarter(
+    function getCurrentMonth(
         progress: number
     ) {
         if (
-            quarters.length === 0
+            months.length === 0
         ) {
             return ''
         }
+
 
         const index =
             Math.min(
                 Math.floor(
                     progress *
-                    quarters.length
+                    months.length
                 ),
-                quarters.length - 1
+                months.length - 1
             )
 
-        return quarters[index]
+
+        return months[
+            index
+        ]
     }
 
-    // ----------------------------------
-    // FRAME UPDATE
-    // ----------------------------------
 
     function updateFrame(
         progress: number
@@ -781,51 +1015,28 @@ export function renderTimelapseMap(
             progress
         )
 
-        const revealedCustomers =
-            customerData.filter(
-                customer =>
-                    revealedCustomerIds.has(
-                        customer.id
-                    )
-            )
 
-        const nonprofitCount =
-            revealedCustomers.length
-
-        const peopleServed =
-            d3.sum(
-                revealedCustomers,
-                customer =>
-                    customer.peopleServed ?? 0
-            )
-
-        const quarter =
-            getCurrentQuarter(
+        const currentMonth =
+            getCurrentMonth(
                 progress
             )
 
-        options.onFrame?.({
-            quarter,
-            nonprofitCount,
-            peopleServed,
-            progress
-        })
 
-        const boliviaVisible =
-            projectedBoliviaCustomers.some(
-                customer =>
-                    revealedCustomerIds.has(
-                        customer.id
-                    )
-            )
+        options.onFrame?.(
+            {
+                month:
+                    monthLabel(
+                        currentMonth
+                    ),
 
-        insetGroup.style(
-            'opacity',
-            boliviaVisible
-                ? 1
-                : 0.78
+                nonprofitCount:
+                    revealedCustomerIds.size,
+
+                progress
+            }
         )
     }
+
 
     // ----------------------------------
     // RESET
@@ -834,71 +1045,92 @@ export function renderTimelapseMap(
     function reset() {
         revealedCustomerIds.clear()
 
-        pulseLayer
+
+        usPulseLayer
             .selectAll('*')
-            .interrupt()
             .remove()
 
-        markerLayer
+
+        usMarkerLayer
             .selectAll('*')
-            .interrupt()
             .remove()
 
-        insetPulseLayer
+
+        canadaPulseLayer
             .selectAll('*')
-            .interrupt()
             .remove()
 
-        insetDotLayer
+
+        canadaMarkerLayer
             .selectAll('*')
-            .interrupt()
             .remove()
 
-        insetGroup.style(
-            'opacity',
-            0.78
+
+        boliviaPulseLayer
+            .selectAll('*')
+            .remove()
+
+
+        boliviaMarkerLayer
+            .selectAll('*')
+            .remove()
+
+
+        options.onFrame?.(
+            {
+                month:
+                    months.length
+                        ? monthLabel(
+                            months[0]
+                        )
+                        : '',
+
+                nonprofitCount:
+                    0,
+
+                progress:
+                    0
+            }
         )
-
-        options.onFrame?.({
-            quarter:
-                quarters[0] ?? '',
-            nonprofitCount: 0,
-            peopleServed: 0,
-            progress: 0
-        })
     }
 
+
     // ----------------------------------
-    // CONTINUOUS PLAYBACK
+    // ANIMATION
     // ----------------------------------
 
     function startAnimation() {
-        if (stopped) {
+        if (
+            stopped
+        ) {
             return
         }
 
+
         reset()
 
-        timeoutId =
-            setTimeout(
-                () => {
-                    if (stopped) {
-                        return
-                    }
 
+        timeoutId =
+            window.setTimeout(
+                () => {
                     const startTime =
                         performance.now()
+
 
                     function animate(
                         currentTime: number
                     ) {
-                        if (stopped) {
+                        if (
+                            stopped
+                        ) {
                             return
                         }
+
 
                         const elapsed =
                             currentTime -
                             startTime
+
 
                         const progress =
                             Math.max(
@@ -910,12 +1142,15 @@ export function renderTimelapseMap(
                                 )
                             )
 
+
                         updateFrame(
                             progress
                         )
 
+
                         if (
-                            progress < 1
+                            progress <
+                            1
                         ) {
                             animationFrameId =
                                 requestAnimationFrame(
@@ -925,26 +1160,30 @@ export function renderTimelapseMap(
                             return
                         }
 
+
                         timeoutId =
-                            setTimeout(
+                            window.setTimeout(
                                 () => {
-                                    if (stopped) {
+                                    if (
+                                        stopped
+                                    ) {
                                         return
                                     }
 
+
                                     reset()
 
+
                                     timeoutId =
-                                        setTimeout(
-                                            () => {
-                                                startAnimation()
-                                            },
+                                        window.setTimeout(
+                                            startAnimation,
                                             restartDelay
                                         )
                                 },
                                 finalHoldDuration
                             )
                     }
+
 
                     animationFrameId =
                         requestAnimationFrame(
@@ -955,11 +1194,9 @@ export function renderTimelapseMap(
             )
     }
 
-    // ----------------------------------
-    // START
-    // ----------------------------------
 
     startAnimation()
+
 
     // ----------------------------------
     // CLEANUP
@@ -968,22 +1205,29 @@ export function renderTimelapseMap(
     return () => {
         stopped = true
 
+
         if (
-            animationFrameId !== null
+            animationFrameId !==
+            null
         ) {
             cancelAnimationFrame(
                 animationFrameId
             )
         }
 
-        if (timeoutId) {
+
+        if (
+            timeoutId !==
+            null
+        ) {
             clearTimeout(
                 timeoutId
             )
         }
 
+
         svg
             .selectAll('*')
             .interrupt()
     }
-}
+} 

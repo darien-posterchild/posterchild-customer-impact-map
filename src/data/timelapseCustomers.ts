@@ -1,79 +1,117 @@
-import customers from './customers.json'
+import {
+    realCustomers,
+    type CommunitySize,
+    type RealCustomer
+} from './realCustomers'
 
-import type { Customer } from '../types/customer'
+import {
+    customerLocations
+} from './customerLocations'
 
-export type TimelapseCustomer =
-    Omit<Customer, 'country' | 'state'> & {
-        state?: string
-        country: string
-        startQuarter: string
-    }
 
-const prototypeQuarters = [
-    '2023-Q1',
-    '2023-Q2',
-    '2023-Q3',
-    '2023-Q4',
+export interface TimelapseCustomer {
+    id: string
+    name: string
+    website: string | null
 
-    '2024-Q1',
-    '2024-Q2',
-    '2024-Q3',
-    '2024-Q4',
+    year: number
+    month: number
 
-    '2025-Q1',
-    '2025-Q2',
-    '2025-Q3',
-    '2025-Q4',
+    communitySize: CommunitySize
 
-    '2026-Q1',
-    '2026-Q2',
-    '2026-Q3'
-]
+    city: string
+    state: string | null
+    country: string
 
-const usCustomers: TimelapseCustomer[] =
-    (customers as Customer[]).map(
-        (customer, index) => {
-            const quarterIndex = Math.min(
-                Math.floor(
-                    index *
-                    prototypeQuarters.length /
-                    customers.length
-                ),
-                prototypeQuarters.length - 1
-            )
+    latitude: number
+    longitude: number
 
-            return {
-                ...customer,
-
-                country: 'US',
-
-                startQuarter:
-                    prototypeQuarters[
-                    quarterIndex
-                    ]
-            }
-        }
-    )
-
-const boliviaCustomer: TimelapseCustomer = {
-    id: 'bolivia-community-partner',
-
-    name: 'Prototype Bolivia Customer',
-
-    city: 'La Paz',
-
-    country: 'BO',
-
-    latitude: -16.4897,
-    longitude: -68.1193,
-
-    peopleServed: 12000,
-
-    startQuarter: '2025-Q3'
+    startMonth: string
 }
 
-export const timelapseCustomers:
-    TimelapseCustomer[] = [
-        ...usCustomers,
-        boliviaCustomer
-    ]
+
+function createStartMonth(
+    year: number,
+    month: number
+) {
+    return `${year}-${String(month).padStart(2, '0')}`
+}
+
+
+function findLocation(
+    customer: RealCustomer
+) {
+    return customerLocations.find(
+        location =>
+            location.name
+                .trim()
+                .toLowerCase() ===
+            customer.name
+                .trim()
+                .toLowerCase()
+    )
+}
+
+
+export const timelapseCustomers: TimelapseCustomer[] =
+    realCustomers
+        .map(customer => {
+            const location =
+                findLocation(customer)
+
+            if (!location) {
+                return null
+            }
+
+            return {
+                id: customer.id,
+
+                name: customer.name,
+
+                website:
+                    customer.website,
+
+                year:
+                    customer.year,
+
+                month:
+                    customer.month,
+
+                communitySize:
+                    customer.communitySize,
+
+                city:
+                    location.city,
+
+                state:
+                    location.state,
+
+                country:
+                    location.country,
+
+                latitude:
+                    location.latitude,
+
+                longitude:
+                    location.longitude,
+
+                startMonth:
+                    createStartMonth(
+                        customer.year,
+                        customer.month
+                    )
+            }
+        })
+        .filter(
+            (
+                customer
+            ): customer is TimelapseCustomer =>
+                customer !== null
+        )
+
+
+export const missingCustomerLocations =
+    realCustomers.filter(
+        customer =>
+            !findLocation(customer)
+    )
