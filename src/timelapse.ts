@@ -32,13 +32,11 @@ document
         </p>
 
         <h1>
-          Growing alongside
-          our customers.
+          Growing alongside our customers.
         </h1>
 
         <p class="timelapse-subtitle">
-          See how the PosterChild community
-          has grown over time.
+          See how the PosterChild community has grown over time.
         </p>
 
       </div>
@@ -110,73 +108,6 @@ document
 
           <span>
             2026
-          </span>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <section
-      class="community-size-legend"
-      aria-label="Community size"
-    >
-
-      <span class="community-size-label">
-        Community served
-      </span>
-
-
-      <div class="community-size-items">
-
-        <div class="community-size-item">
-
-          <span
-            class="community-size-dot community-size-dot-small"
-          ></span>
-
-          <span>
-            Small
-          </span>
-
-          <span class="community-size-range">
-            0–2K
-          </span>
-
-        </div>
-
-
-        <div class="community-size-item">
-
-          <span
-            class="community-size-dot community-size-dot-large"
-          ></span>
-
-          <span>
-            Large
-          </span>
-
-          <span class="community-size-range">
-            2K–20K
-          </span>
-
-        </div>
-
-
-        <div class="community-size-item">
-
-          <span
-            class="community-size-dot community-size-dot-huge"
-          ></span>
-
-          <span>
-            Huge
-          </span>
-
-          <span class="community-size-range">
-            20K+
           </span>
 
         </div>

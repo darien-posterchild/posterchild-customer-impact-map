@@ -599,5 +599,21 @@ export const customerLocations: CustomerLocation[] = [
         country: 'US',
         latitude: 37.8044,
         longitude: -122.2712
+    },
+    {
+        name: 'KREWE',
+        city: 'Washington',
+        state: 'DC',
+        country: 'US',
+        latitude: 38.9072,
+        longitude: -77.0369
+    },
+    {
+        name: 'AMEX',
+        city: 'New York',
+        state: 'NY',
+        country: 'US',
+        latitude: 40.7128,
+        longitude: -74.006
     }
 ]

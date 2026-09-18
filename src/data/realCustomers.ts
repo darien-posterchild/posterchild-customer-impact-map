@@ -224,20 +224,6 @@ export const realCustomers: RealCustomer[] = [
         longitude: null,
     },
     {
-        id: "community-catalyst-2026",
-        name: "Community Catalyst",
-        website: "https://communitycatalyst.org/",
-        year: 2026,
-        month: 6,
-        communitySize: "huge",
-        city: null,
-        state: null,
-        country: null,
-        latitude: null,
-        longitude: null,
-        // Also appears again in the 2026 section. Kept as a separate source row for now.
-    },
-    {
         id: "spelman-college-2026",
         name: "Spelman College",
         website: "https://www.spelman.edu/",
