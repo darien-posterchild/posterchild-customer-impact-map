@@ -575,5 +575,29 @@ export const customerLocations: CustomerLocation[] = [
         country: 'US',
         latitude: 37.8715,
         longitude: -122.273
+    },
+    {
+        name: 'TRIO',
+        city: 'Berkeley',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.8715,
+        longitude: -122.273
+    },
+    {
+        name: 'Fresh Out (OBBIAC)',
+        city: 'Portland',
+        state: 'OR',
+        country: 'US',
+        latitude: 45.5152,
+        longitude: -122.6784
+    },
+    {
+        name: 'TEAM Inc',
+        city: 'Oakland',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.8044,
+        longitude: -122.2712
     }
 ]
