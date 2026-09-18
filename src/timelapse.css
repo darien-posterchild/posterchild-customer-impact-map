@@ -46,7 +46,7 @@ body {
     margin: 0 auto;
 
     padding:
-        40px 32px 54px;
+        34px 32px 36px;
 }
 
 
@@ -65,7 +65,7 @@ body {
 
     gap: 40px;
 
-    margin-bottom: 28px;
+    margin-bottom: 26px;
 }
 
 .timelapse-copy {
@@ -116,7 +116,7 @@ body {
     max-width: 580px;
 
     margin:
-        16px 0 0;
+        14px 0 0;
 
     font-size: 16px;
     line-height: 1.5;
@@ -149,30 +149,40 @@ body {
 
 
 /* ----------------------------------
+   IMPACT + TIMELINE ROW
+----------------------------------- */
+
+.impact-timeline-row {
+    display: grid;
+
+    grid-template-columns:
+        220px minmax(0, 1fr);
+
+    align-items: end;
+
+    gap: 54px;
+
+    width: 100%;
+
+    padding:
+        20px 0 18px;
+
+    border-top:
+        1px solid #eaecf0;
+}
+
+
+/* ----------------------------------
    STATS
 ----------------------------------- */
 
 .timelapse-stats {
-    display: grid;
+    display: block;
 
-    grid-template-columns:
-        repeat(2,
-            minmax(0, 1fr));
+    width: 100%;
 
-    max-width: 600px;
-
-    gap: 60px;
-
-    padding:
-        22px 0 26px;
-
-    margin-bottom: 24px;
-
-    border-top:
-        1px solid #e4e7ec;
-
-    border-bottom:
-        1px solid #e4e7ec;
+    margin: 0;
+    padding: 0;
 }
 
 .timelapse-stat {
@@ -180,43 +190,28 @@ body {
 
     flex-direction: column;
 
-    min-width: 0;
-
     gap: 4px;
 }
 
 .timelapse-stat strong {
-    display: inline-block;
-
     width: max-content;
 
     font-family:
         "Fraunces",
         serif;
 
-    font-size: 38px;
-    line-height: 1;
+    font-size: 40px;
+    line-height: 0.95;
 
     font-weight: 600;
 
     letter-spacing:
-        -0.02em;
+        -0.025em;
 
     color: #17212b;
 
     font-variant-numeric:
         tabular-nums;
-
-    transform-origin:
-        left center;
-
-    will-change:
-        transform,
-        opacity;
-}
-
-.timelapse-stat strong.is-changing {
-    animation: none;
 }
 
 .timelapse-stat span {
@@ -233,23 +228,12 @@ body {
 .timeline-section {
     width: 100%;
 
-    margin-bottom: 18px;
-
-    padding:
-        18px 20px;
-
-    border:
-        1px solid #e4e7ec;
-
-    border-radius:
-        12px;
-
-    background:
-        #ffffff;
+    margin: 0;
+    padding: 0;
 }
 
 .timeline-quarter {
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 
     font-family:
         "Fraunces",
@@ -304,7 +288,7 @@ body {
     justify-content:
         space-between;
 
-    margin-top: 8px;
+    margin-top: 7px;
 
     font-size: 10px;
 
@@ -314,6 +298,103 @@ body {
 
     font-variant-numeric:
         tabular-nums;
+}
+
+
+/* ----------------------------------
+   COMMUNITY SIZE LEGEND
+----------------------------------- */
+
+.community-size-legend {
+    display: flex;
+
+    align-items: center;
+
+    gap: 22px;
+
+    width: 100%;
+
+    margin:
+        0 0 4px;
+
+    padding:
+        13px 0 8px;
+
+    border-top:
+        1px solid #eaecf0;
+}
+
+.community-size-label {
+    flex-shrink: 0;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #667085;
+}
+
+.community-size-items {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 24px;
+}
+
+.community-size-item {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #344054;
+}
+
+.community-size-range {
+    font-weight: 400;
+
+    color: #98a2b3;
+}
+
+.community-size-dot {
+    display: inline-block;
+
+    flex-shrink: 0;
+
+    border-radius:
+        999px;
+
+    background:
+        #f7b92e;
+
+    border:
+        1.5px solid #ffffff;
+
+    box-shadow:
+        0 0 0 1px #f7b92e;
+}
+
+.community-size-dot-small {
+    width: 10px;
+    height: 10px;
+}
+
+.community-size-dot-large {
+    width: 16px;
+    height: 16px;
+}
+
+.community-size-dot-huge {
+    width: 24px;
+    height: 24px;
 }
 
 
@@ -338,7 +419,9 @@ body {
 
     width: 100%;
 
-    margin: 0;
+    margin:
+        -4px 0 0;
+
     padding: 0;
 
     min-height: 760px;
@@ -404,7 +487,7 @@ body {
 
 
 /* ----------------------------------
-   PULSE / RIPPLE
+   PULSE
 ----------------------------------- */
 
 .timelapse-pulse {
@@ -425,7 +508,7 @@ body {
    INTERNATIONAL
 ----------------------------------- */
 
-.timelapse-inset {
+.timelapse-international {
     pointer-events: none;
 }
 
@@ -468,65 +551,15 @@ body {
     fill: #17212b;
 }
 
-.timelapse-inset-dot {
-    fill: #f7b92e;
-
-    stroke: #ffffff;
-
-    stroke-width: 1.5;
-
-    vector-effect:
-        non-scaling-stroke;
-}
-
-
-/* ----------------------------------
-   LEGEND
------------------------------------ */
-
-.timelapse-legend {
-    position: absolute;
-
-    left: 4px;
-    bottom: 6px;
-
-    z-index: 3;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    font-size: 11px;
-
-    color: #475467;
-
-    pointer-events: none;
-}
-
-.timelapse-legend-dot {
-    width: 10px;
-    height: 10px;
-
-    flex-shrink: 0;
-
-    border-radius:
-        999px;
-
-    background:
-        #f7b92e;
-}
-
 
 /* ----------------------------------
    TABLET
 ----------------------------------- */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
     .timelapse-page {
         padding:
-            28px 20px 40px;
+            28px 20px 36px;
     }
 
     .timelapse-header {
@@ -544,14 +577,11 @@ body {
             flex-start;
     }
 
-    .timelapse-stats {
-        max-width: 100%;
+    .impact-timeline-row {
+        grid-template-columns:
+            170px minmax(0, 1fr);
 
         gap: 32px;
-    }
-
-    .timeline-section {
-        margin-bottom: 14px;
     }
 
     .timelapse-stage {
@@ -564,7 +594,7 @@ body {
    MOBILE
 ----------------------------------- */
 
-@media (max-width: 600px) {
+@media (max-width: 640px) {
     .timelapse-page {
         padding:
             20px 14px 28px;
@@ -572,12 +602,7 @@ body {
 
     .timelapse-header {
         margin-bottom:
-            20px;
-    }
-
-    .timelapse-copy {
-        max-width:
-            100%;
+            18px;
     }
 
     .timelapse-eyebrow {
@@ -601,40 +626,21 @@ body {
         line-height: 1.45;
     }
 
-    .timelapse-data-label {
-        padding:
-            6px 9px;
+    .impact-timeline-row {
+        grid-template-columns:
+            1fr;
 
-        font-size: 10px;
-    }
+        gap: 20px;
 
-    .timelapse-stats {
-        gap: 18px;
-
-        padding:
-            16px 0 18px;
-
-        margin-bottom:
-            16px;
+        padding-top:
+            18px;
     }
 
     .timelapse-stat strong {
-        font-size: 28px;
-    }
-
-    .timelapse-stat span {
-        font-size: 10px;
-    }
-
-    .timeline-section {
-        margin-bottom: 10px;
-
-        padding: 14px;
+        font-size: 32px;
     }
 
     .timeline-quarter {
-        margin-bottom: 10px;
-
         font-size: 20px;
     }
 
@@ -642,20 +648,30 @@ body {
         font-size: 8px;
     }
 
+    .community-size-legend {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap: 10px;
+
+        padding-top:
+            12px;
+    }
+
+    .community-size-items {
+        gap:
+            14px 18px;
+    }
+
+    .community-size-item {
+        font-size: 10px;
+    }
+
     .timelapse-stage {
         min-height: 500px;
-    }
-
-    .timelapse-legend {
-        left: 0;
-        bottom: 0;
-
-        font-size: 9px;
-    }
-
-    .timelapse-legend-dot {
-        width: 8px;
-        height: 8px;
     }
 }
 
@@ -667,9 +683,5 @@ body {
 @media (prefers-reduced-motion: reduce) {
     .timeline-progress {
         transition: none;
-    }
-
-    .timelapse-stat strong.is-changing {
-        animation: none;
     }
 }

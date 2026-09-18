@@ -74,21 +74,6 @@ document
 
         </div>
 
-
-        <div class="timelapse-stat timelapse-stat-community">
-
-          <strong
-            class="community-reach-title"
-          >
-            Community reach
-          </strong>
-
-          <span>
-            Small · Large · Huge
-          </span>
-
-        </div>
-
       </div>
 
 
@@ -134,6 +119,73 @@ document
     </section>
 
 
+    <section
+      class="community-size-legend"
+      aria-label="Community size"
+    >
+
+      <span class="community-size-label">
+        Community served
+      </span>
+
+
+      <div class="community-size-items">
+
+        <div class="community-size-item">
+
+          <span
+            class="community-size-dot community-size-dot-small"
+          ></span>
+
+          <span>
+            Small
+          </span>
+
+          <span class="community-size-range">
+            0–2K
+          </span>
+
+        </div>
+
+
+        <div class="community-size-item">
+
+          <span
+            class="community-size-dot community-size-dot-large"
+          ></span>
+
+          <span>
+            Large
+          </span>
+
+          <span class="community-size-range">
+            2K–20K
+          </span>
+
+        </div>
+
+
+        <div class="community-size-item">
+
+          <span
+            class="community-size-dot community-size-dot-huge"
+          ></span>
+
+          <span>
+            Huge
+          </span>
+
+          <span class="community-size-range">
+            20K+
+          </span>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
     <section class="maps-section">
 
       <div class="timelapse-stage">
@@ -142,46 +194,6 @@ document
           class="timelapse-map"
           id="timelapse-map"
         ></div>
-
-        <div class="timelapse-legend">
-
-          <div
-            class="timelapse-legend-item"
-          >
-            <span
-              class="timelapse-legend-dot timelapse-legend-dot-small"
-            ></span>
-
-            <span>
-              Small · 0–2K
-            </span>
-          </div>
-
-          <div
-            class="timelapse-legend-item"
-          >
-            <span
-              class="timelapse-legend-dot timelapse-legend-dot-large"
-            ></span>
-
-            <span>
-              Large · 2K–20K
-            </span>
-          </div>
-
-          <div
-            class="timelapse-legend-item"
-          >
-            <span
-              class="timelapse-legend-dot timelapse-legend-dot-huge"
-            ></span>
-
-            <span>
-              Huge · 20K+
-            </span>
-          </div>
-
-        </div>
 
       </div>
 
@@ -316,25 +328,13 @@ if (
     {
       onFrame: frame => {
 
-        // ----------------------------
-        // NONPROFIT COUNT
-        // ----------------------------
-
         targetNonprofits =
           frame.nonprofitCount
 
 
-        // ----------------------------
-        // MONTH
-        // ----------------------------
-
         monthLabel.textContent =
           frame.month
 
-
-        // ----------------------------
-        // CONTINUOUS TIMELINE
-        // ----------------------------
 
         const progress =
           Math.max(

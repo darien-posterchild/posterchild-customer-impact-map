@@ -353,94 +353,6 @@ export const customerLocations: CustomerLocation[] = [
         longitude: -122.2712
     },
     {
-        name: '510 Media Hope Foundation',
-        city: 'Oakland',
-        state: 'CA',
-        country: 'US',
-        latitude: 37.8044,
-        longitude: -122.2712
-    },
-    {
-        name: 'Milwaukee Black Grassroots Network for Health Equity',
-        city: 'Milwaukee',
-        state: 'WI',
-        country: 'US',
-        latitude: 43.0389,
-        longitude: -87.9065
-    },
-    {
-        name: 'Spaces in Action',
-        city: 'Washington',
-        state: 'DC',
-        country: 'US',
-        latitude: 38.9072,
-        longitude: -77.0369
-    },
-    {
-        name: 'Virginia Organizing',
-        city: 'Charlottesville',
-        state: 'VA',
-        country: 'US',
-        latitude: 38.0293,
-        longitude: -78.4767
-    },
-    {
-        name: 'Alliance for a Healthy Kansas',
-        city: 'Topeka',
-        state: 'KS',
-        country: 'US',
-        latitude: 39.0473,
-        longitude: -95.6752
-    },
-    {
-        name: 'Asian Pacific Community in Action',
-        city: 'Phoenix',
-        state: 'AZ',
-        country: 'US',
-        latitude: 33.4484,
-        longitude: -112.074
-    },
-    {
-        name: 'Center For Health Progress',
-        city: 'Denver',
-        state: 'CO',
-        country: 'US',
-        latitude: 39.7392,
-        longitude: -104.9903
-    },
-    {
-        name: 'Hyde Park School of Dance',
-        city: 'Chicago',
-        state: 'IL',
-        country: 'US',
-        latitude: 41.8781,
-        longitude: -87.6298
-    },
-    {
-        name: 'UC Berkeley CE3 (Equity)',
-        city: 'Berkeley',
-        state: 'CA',
-        country: 'US',
-        latitude: 37.8715,
-        longitude: -122.273
-    },
-    {
-        name: 'Hiiiwave',
-        city: 'Oakland',
-        state: 'CA',
-        country: 'US',
-        latitude: 37.8044,
-        longitude: -122.2712
-    },
-    {
-        name: 'Oakland Ed Fund',
-        city: 'Oakland',
-        state: 'CA',
-        country: 'US',
-        latitude: 37.8044,
-        longitude: -122.2712
-    },
-    {
         name: 'The SickleWell Foundation',
         city: 'Los Angeles',
         state: 'CA',
@@ -575,6 +487,93 @@ export const customerLocations: CustomerLocation[] = [
         country: 'US',
         latitude: 29.7604,
         longitude: -95.3698
+    },
+    {
+        name: 'New Media Ventures',
+        city: 'San Francisco',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.7749,
+        longitude: -122.4194
+    },
+    {
+        name: 'LACHON',
+        city: 'New Orleans',
+        state: 'LA',
+        country: 'US',
+        latitude: 29.9511,
+        longitude: -90.0715
+    },
+    {
+        name: 'KaiXR',
+        city: 'Birmingham',
+        state: 'AL',
+        country: 'US',
+        latitude: 33.5186,
+        longitude: -86.8104
+    },
+    {
+        name: 'Talk-A-Mile',
+        city: 'Portland',
+        state: 'OR',
+        country: 'US',
+        latitude: 45.5152,
+        longitude: -122.6784
+    },
+    {
+        name: 'NBA Foundation',
+        city: 'New York',
+        state: 'NY',
+        country: 'US',
+        latitude: 40.7128,
+        longitude: -74.006
+    },
+    {
+        name: 'Color of Autism',
+        city: 'Beverly Hills',
+        state: 'MI',
+        country: 'US',
+        latitude: 42.5236,
+        longitude: -83.2233
+    },
+    {
+        name: 'Choose College',
+        city: 'Oakland',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.8044,
+        longitude: -122.2712
+    },
+    {
+        name: 'Junior Achievement',
+        city: 'Colorado Springs',
+        state: 'CO',
+        country: 'US',
+        latitude: 38.8339,
+        longitude: -104.8214
+    },
+    {
+        name: 'Sexual Assault Advocacy Network',
+        city: 'Sacramento',
+        state: 'CA',
+        country: 'US',
+        latitude: 38.5816,
+        longitude: -121.4944
+    },
+    {
+        name: 'AfroPlay',
+        city: 'Oakland',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.8044,
+        longitude: -122.2712
+    },
+    {
+        name: 'Colorwave',
+        city: 'Berkeley',
+        state: 'CA',
+        country: 'US',
+        latitude: 37.8715,
+        longitude: -122.273
     }
-
 ]
