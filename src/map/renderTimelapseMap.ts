@@ -52,7 +52,7 @@ function getRadius(
 }
 
 
-function monthLabel(
+function formatMonth(
     value: string
 ) {
     const [
@@ -83,20 +83,18 @@ export function renderTimelapseMap(
 ) {
     container.innerHTML = ''
 
+
+    // ----------------------------------
+    // STAGE
+    // ----------------------------------
+
     const width = 1200
-    const height = 760
+    const height = 620
 
-    const animationDuration =
-        20000
-
-    const introDelay =
-        700
-
-    const finalHoldDuration =
-        3000
-
-    const restartDelay =
-        800
+    const animationDuration = 20000
+    const introDelay = 700
+    const finalHoldDuration = 3000
+    const restartDelay = 800
 
     let animationFrameId:
         number | null = null
@@ -215,7 +213,7 @@ export function renderTimelapseMap(
 
 
     // ----------------------------------
-    // MAP DATA
+    // GEOGRAPHY
     // ----------------------------------
 
     const states =
@@ -237,7 +235,7 @@ export function renderTimelapseMap(
 
 
     // ----------------------------------
-    // US MAP
+    // MAIN US MAP
     // ----------------------------------
 
     const usProjection =
@@ -246,12 +244,12 @@ export function renderTimelapseMap(
             .fitExtent(
                 [
                     [
-                        20,
-                        20
+                        178,
+                        16
                     ],
                     [
-                        width - 20,
-                        560
+                        width - 12,
+                        height - 16
                     ]
                 ],
                 states as any
@@ -259,14 +257,17 @@ export function renderTimelapseMap(
 
 
     const usPath =
-        d3
-            .geoPath(
-                usProjection
-            )
+        d3.geoPath(
+            usProjection
+        )
 
 
     svg
         .append('g')
+        .attr(
+            'class',
+            'timelapse-us-map'
+        )
         .selectAll('path')
         .data(
             (
@@ -285,17 +286,14 @@ export function renderTimelapseMap(
 
 
     const usPulseLayer =
-        svg
-            .append('g')
-
+        svg.append('g')
 
     const usMarkerLayer =
-        svg
-            .append('g')
+        svg.append('g')
 
 
     // ----------------------------------
-    // INTERNATIONAL SECTION
+    // INTERNATIONAL
     // ----------------------------------
 
     const internationalGroup =
@@ -311,11 +309,11 @@ export function renderTimelapseMap(
         .append('text')
         .attr(
             'x',
-            width / 2
+            66
         )
         .attr(
             'y',
-            595
+            34
         )
         .attr(
             'text-anchor',
@@ -330,21 +328,70 @@ export function renderTimelapseMap(
         )
 
 
+    // ----------------------------------
+    // FIND COUNTRIES
+    // ----------------------------------
+
+    const canadaFeature =
+        (
+            countries as any
+        ).features.find(
+            (
+                country: any
+            ) => {
+                const [
+                    longitude,
+                    latitude
+                ] =
+                    d3.geoCentroid(
+                        country
+                    )
+
+                return (
+                    longitude > -142 &&
+                    longitude < -52 &&
+                    latitude > 40 &&
+                    latitude < 84
+                )
+            }
+        )
+
+
+    const boliviaFeature =
+        (
+            countries as any
+        ).features.find(
+            (
+                country: any
+            ) => {
+                const [
+                    longitude,
+                    latitude
+                ] =
+                    d3.geoCentroid(
+                        country
+                    )
+
+                return (
+                    longitude > -70 &&
+                    longitude < -56 &&
+                    latitude > -24 &&
+                    latitude < -8
+                )
+            }
+        )
+
+
+    // ----------------------------------
+    // CANADA
+    // ----------------------------------
+
     const canadaGroup =
         internationalGroup
             .append('g')
             .attr(
                 'transform',
-                'translate(390,610)'
-            )
-
-
-    const boliviaGroup =
-        internationalGroup
-            .append('g')
-            .attr(
-                'transform',
-                'translate(640,610)'
+                'translate(-12,70)'
             )
 
 
@@ -352,7 +399,7 @@ export function renderTimelapseMap(
         .append('text')
         .attr(
             'x',
-            90
+            78
         )
         .attr(
             'y',
@@ -371,11 +418,73 @@ export function renderTimelapseMap(
         )
 
 
+    const canadaProjection =
+        d3.geoMercator()
+
+
+    if (canadaFeature) {
+        canadaProjection.fitExtent(
+            [
+                [
+                    18,
+                    36
+                ],
+                [
+                    138,
+                    184
+                ]
+            ],
+            canadaFeature
+        )
+
+
+        const canadaPath =
+            d3.geoPath(
+                canadaProjection
+            )
+
+
+        canadaGroup
+            .append('path')
+            .datum(
+                canadaFeature
+            )
+            .attr(
+                'class',
+                'timelapse-inset-country'
+            )
+            .attr(
+                'd',
+                canadaPath as any
+            )
+    }
+
+
+    const canadaPulseLayer =
+        canadaGroup.append('g')
+
+    const canadaMarkerLayer =
+        canadaGroup.append('g')
+
+
+    // ----------------------------------
+    // BOLIVIA
+    // ----------------------------------
+
+    const boliviaGroup =
+        internationalGroup
+            .append('g')
+            .attr(
+                'transform',
+                'translate(-12,342)'
+            )
+
+
     boliviaGroup
         .append('text')
         .attr(
             'x',
-            90
+            78
         )
         .attr(
             'y',
@@ -394,131 +503,31 @@ export function renderTimelapseMap(
         )
 
 
-    const canadaFeature =
-        (
-            countries as any
-        ).features.find(
-            (
-                country: any
-            ) => {
-                const centroid =
-                    d3.geoCentroid(
-                        country
-                    )
-
-                const [
-                    longitude,
-                    latitude
-                ] = centroid
-
-                return (
-                    longitude >
-                    -142 &&
-                    longitude <
-                    -52 &&
-                    latitude >
-                    40 &&
-                    latitude <
-                    84
-                )
-            }
-        )
-
-
-    const boliviaFeature =
-        (
-            countries as any
-        ).features.find(
-            (
-                country: any
-            ) => {
-                const centroid =
-                    d3.geoCentroid(
-                        country
-                    )
-
-                const [
-                    longitude,
-                    latitude
-                ] = centroid
-
-                return (
-                    longitude >
-                    -70 &&
-                    longitude <
-                    -56 &&
-                    latitude >
-                    -24 &&
-                    latitude <
-                    -8
-                )
-            }
-        )
-
-
-    const canadaProjection =
-        d3
-            .geoMercator()
-
-    if (canadaFeature) {
-        canadaProjection.fitExtent(
-            [
-                [
-                    18,
-                    28
-                ],
-                [
-                    162,
-                    125
-                ]
-            ],
-            canadaFeature
-        )
-
-        const canadaPath =
-            d3.geoPath(
-                canadaProjection
-            )
-
-        canadaGroup
-            .append('path')
-            .datum(
-                canadaFeature
-            )
-            .attr(
-                'class',
-                'timelapse-inset-country'
-            )
-            .attr(
-                'd',
-                canadaPath as any
-            )
-    }
-
-
     const boliviaProjection =
-        d3
-            .geoMercator()
+        d3.geoMercator()
+
 
     if (boliviaFeature) {
         boliviaProjection.fitExtent(
             [
                 [
                     28,
-                    30
+                    38
                 ],
                 [
-                    152,
-                    125
+                    128,
+                    176
                 ]
             ],
             boliviaFeature
         )
 
+
         const boliviaPath =
             d3.geoPath(
                 boliviaProjection
             )
+
 
         boliviaGroup
             .append('path')
@@ -536,28 +545,15 @@ export function renderTimelapseMap(
     }
 
 
-    const canadaPulseLayer =
-        canadaGroup
-            .append('g')
-
-
-    const canadaMarkerLayer =
-        canadaGroup
-            .append('g')
-
-
     const boliviaPulseLayer =
-        boliviaGroup
-            .append('g')
-
+        boliviaGroup.append('g')
 
     const boliviaMarkerLayer =
-        boliviaGroup
-            .append('g')
+        boliviaGroup.append('g')
 
 
     // ----------------------------------
-    // REVEAL PROGRESS
+    // REVEAL POSITION
     // ----------------------------------
 
     function getRevealProgress(
@@ -597,7 +593,8 @@ export function renderTimelapseMap(
             monthCustomers.length <= 1
                 ? 0.5
                 : (
-                    customerIndex + 1
+                    customerIndex +
+                    1
                 ) /
                 (
                     monthCustomers.length +
@@ -607,8 +604,10 @@ export function renderTimelapseMap(
 
         return Math.min(
             monthStart +
-            monthLength *
-            positionInsideMonth,
+            (
+                monthLength *
+                positionInsideMonth
+            ),
             0.995
         )
     }
@@ -644,9 +643,11 @@ export function renderTimelapseMap(
                     ]
                 )
 
+
             if (!point) {
                 continue
             }
+
 
             projectedCustomers.push(
                 {
@@ -666,6 +667,7 @@ export function renderTimelapseMap(
                         )
                 }
             )
+
 
             continue
         }
@@ -683,9 +685,11 @@ export function renderTimelapseMap(
                     ]
                 )
 
+
             if (!point) {
                 continue
             }
+
 
             projectedCustomers.push(
                 {
@@ -706,6 +710,7 @@ export function renderTimelapseMap(
                 }
             )
 
+
             continue
         }
 
@@ -722,9 +727,11 @@ export function renderTimelapseMap(
                     ]
                 )
 
+
             if (!point) {
                 continue
             }
+
 
             projectedCustomers.push(
                 {
@@ -998,7 +1005,8 @@ export function renderTimelapseMap(
                     progress *
                     months.length
                 ),
-                months.length - 1
+                months.length -
+                1
             )
 
 
@@ -1025,7 +1033,7 @@ export function renderTimelapseMap(
         options.onFrame?.(
             {
                 month:
-                    monthLabel(
+                    formatMonth(
                         currentMonth
                     ),
 
@@ -1080,7 +1088,7 @@ export function renderTimelapseMap(
             {
                 month:
                     months.length
-                        ? monthLabel(
+                        ? formatMonth(
                             months[0]
                         )
                         : '',
@@ -1230,4 +1238,4 @@ export function renderTimelapseMap(
             .selectAll('*')
             .interrupt()
     }
-} 
+}

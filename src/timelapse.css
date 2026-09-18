@@ -16,22 +16,38 @@ body {
 }
 
 :root {
-    font-family: "DM Sans", sans-serif;
+    font-family:
+        "DM Sans",
+        sans-serif;
 
-    color: #17212b;
-    background: #ffffff;
+    color:
+        #17212b;
 
-    font-synthesis: none;
-    text-rendering: optimizeLegibility;
+    background:
+        #ffffff;
+
+    font-synthesis:
+        none;
+
+    text-rendering:
+        optimizeLegibility;
 }
 
 body {
-    min-width: 320px;
+    min-width:
+        320px;
 
-    background: #ffffff;
-    color: #17212b;
+    margin:
+        0;
 
-    overflow-x: hidden;
+    background:
+        #ffffff;
+
+    color:
+        #17212b;
+
+    overflow-x:
+        hidden;
 }
 
 
@@ -40,13 +56,20 @@ body {
 ----------------------------------- */
 
 .timelapse-page {
-    width: 100%;
-    max-width: 1540px;
+    width:
+        100%;
 
-    margin: 0 auto;
+    max-width:
+        1540px;
+
+    min-height:
+        100dvh;
+
+    margin:
+        0 auto;
 
     padding:
-        34px 32px 36px;
+        22px 30px 24px;
 }
 
 
@@ -55,7 +78,8 @@ body {
 ----------------------------------- */
 
 .timelapse-header {
-    display: flex;
+    display:
+        flex;
 
     justify-content:
         space-between;
@@ -63,72 +87,107 @@ body {
     align-items:
         flex-start;
 
-    gap: 40px;
+    gap:
+        24px;
 
-    margin-bottom: 26px;
+    margin-bottom:
+        16px;
 }
+
 
 .timelapse-copy {
-    width: 100%;
-    max-width: 780px;
+    width:
+        100%;
+
+    max-width:
+        none;
 }
+
 
 .timelapse-eyebrow {
     margin:
-        0 0 12px;
+        0 0 7px;
 
-    font-size: 12px;
-    line-height: 1.2;
+    font-size:
+        10px;
 
-    font-weight: 700;
+    line-height:
+        1.2;
 
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
+    font-weight:
+        700;
 
-    color: #475467;
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.08em;
+
+    color:
+        #475467;
 }
 
-.timelapse-header h1 {
-    margin: 0;
 
-    max-width: 760px;
+.timelapse-header h1 {
+    width:
+        100%;
+
+    max-width:
+        none;
+
+    margin:
+        0;
 
     font-family:
         "Fraunces",
         serif;
 
     font-size:
-        clamp(48px,
-            5vw,
-            68px);
+        clamp(36px,
+            3.7vw,
+            48px);
 
-    line-height: 0.98;
+    line-height:
+        0.98;
 
-    font-weight: 600;
+    font-weight:
+        600;
 
     letter-spacing:
         -0.035em;
 
-    color: #17212b;
+    color:
+        #17212b;
 }
+
 
 .timelapse-subtitle {
-    max-width: 580px;
+    width:
+        100%;
+
+    max-width:
+        none;
 
     margin:
-        14px 0 0;
+        9px 0 0;
 
-    font-size: 16px;
-    line-height: 1.5;
+    font-size:
+        13px;
 
-    color: #667085;
+    line-height:
+        1.4;
+
+    color:
+        #667085;
 }
 
+
 .timelapse-data-label {
-    flex-shrink: 0;
+    flex-shrink:
+        0;
 
     padding:
-        7px 10px;
+        6px 9px;
 
     border:
         1px solid #e4e7ec;
@@ -139,85 +198,117 @@ body {
     background:
         #f9fafb;
 
-    font-size: 11px;
-    line-height: 1;
+    font-size:
+        10px;
 
-    font-weight: 600;
+    line-height:
+        1;
 
-    color: #667085;
+    font-weight:
+        600;
+
+    color:
+        #667085;
 }
 
 
 /* ----------------------------------
-   IMPACT + TIMELINE ROW
+   IMPACT + TIMELINE
 ----------------------------------- */
 
 .impact-timeline-row {
-    display: grid;
+    display:
+        grid;
 
     grid-template-columns:
-        220px minmax(0, 1fr);
+        150px minmax(0,
+            1fr);
 
-    align-items: end;
+    align-items:
+        end;
 
-    gap: 54px;
+    gap:
+        28px;
 
-    width: 100%;
+    width:
+        100%;
 
     padding:
-        20px 0 18px;
+        14px 0 12px;
 
     border-top:
+        1px solid #eaecf0;
+
+    border-bottom:
         1px solid #eaecf0;
 }
 
 
 /* ----------------------------------
-   STATS
+   NONPROFIT COUNT
 ----------------------------------- */
 
 .timelapse-stats {
-    display: block;
+    width:
+        100%;
 
-    width: 100%;
+    margin:
+        0;
 
-    margin: 0;
-    padding: 0;
+    padding:
+        0;
 }
+
 
 .timelapse-stat {
-    display: flex;
+    display:
+        flex;
 
-    flex-direction: column;
+    flex-direction:
+        column;
 
-    gap: 4px;
+    gap:
+        3px;
 }
 
+
 .timelapse-stat strong {
-    width: max-content;
+    width:
+        max-content;
 
     font-family:
         "Fraunces",
         serif;
 
-    font-size: 40px;
-    line-height: 0.95;
+    font-size:
+        36px;
 
-    font-weight: 600;
+    line-height:
+        0.9;
+
+    font-weight:
+        600;
 
     letter-spacing:
         -0.025em;
 
-    color: #17212b;
+    color:
+        #17212b;
 
     font-variant-numeric:
         tabular-nums;
 }
 
-.timelapse-stat span {
-    font-size: 12px;
 
-    color: #667085;
+.timelapse-stat span {
+    font-size:
+        10px;
+
+    line-height:
+        1.2;
+
+    color:
+        #667085;
 }
 
 
@@ -226,37 +317,54 @@ body {
 ----------------------------------- */
 
 .timeline-section {
-    width: 100%;
+    width:
+        100%;
 
-    margin: 0;
-    padding: 0;
+    margin:
+        0;
+
+    padding:
+        0;
 }
 
+
 .timeline-quarter {
-    margin-bottom: 10px;
+    margin-bottom:
+        8px;
 
     font-family:
         "Fraunces",
         serif;
 
-    font-size: 24px;
-    line-height: 1;
+    font-size:
+        22px;
 
-    font-weight: 600;
+    line-height:
+        1;
 
-    color: #17212b;
+    font-weight:
+        600;
+
+    color:
+        #17212b;
 
     font-variant-numeric:
         tabular-nums;
 }
 
+
 .timeline-track {
-    position: relative;
+    position:
+        relative;
 
-    width: 100%;
-    height: 3px;
+    width:
+        100%;
 
-    overflow: hidden;
+    height:
+        3px;
+
+    overflow:
+        hidden;
 
     border-radius:
         999px;
@@ -265,9 +373,13 @@ body {
         #eaecf0;
 }
 
+
 .timeline-progress {
-    width: 0%;
-    height: 100%;
+    width:
+        0%;
+
+    height:
+        100%;
 
     border-radius:
         inherit;
@@ -282,19 +394,28 @@ body {
         width;
 }
 
+
 .timeline-years {
-    display: flex;
+    display:
+        flex;
 
     justify-content:
         space-between;
 
-    margin-top: 7px;
+    margin-top:
+        6px;
 
-    font-size: 10px;
+    font-size:
+        9px;
 
-    font-weight: 600;
+    line-height:
+        1;
 
-    color: #98a2b3;
+    font-weight:
+        600;
+
+    color:
+        #98a2b3;
 
     font-variant-numeric:
         tabular-nums;
@@ -302,184 +423,151 @@ body {
 
 
 /* ----------------------------------
-   COMMUNITY SIZE LEGEND
------------------------------------ */
-
-.community-size-legend {
-    display: flex;
-
-    align-items: center;
-
-    gap: 22px;
-
-    width: 100%;
-
-    margin:
-        0 0 4px;
-
-    padding:
-        13px 0 8px;
-
-    border-top:
-        1px solid #eaecf0;
-}
-
-.community-size-label {
-    flex-shrink: 0;
-
-    font-size: 11px;
-
-    font-weight: 600;
-
-    color: #667085;
-}
-
-.community-size-items {
-    display: flex;
-
-    align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 24px;
-}
-
-.community-size-item {
-    display: flex;
-
-    align-items: center;
-
-    gap: 7px;
-
-    font-size: 11px;
-
-    font-weight: 600;
-
-    color: #344054;
-}
-
-.community-size-range {
-    font-weight: 400;
-
-    color: #98a2b3;
-}
-
-.community-size-dot {
-    display: inline-block;
-
-    flex-shrink: 0;
-
-    border-radius:
-        999px;
-
-    background:
-        #f7b92e;
-
-    border:
-        1.5px solid #ffffff;
-
-    box-shadow:
-        0 0 0 1px #f7b92e;
-}
-
-.community-size-dot-small {
-    width: 10px;
-    height: 10px;
-}
-
-.community-size-dot-large {
-    width: 16px;
-    height: 16px;
-}
-
-.community-size-dot-huge {
-    width: 24px;
-    height: 24px;
-}
-
-
-/* ----------------------------------
-   MAP SECTION
+   MAP AREA
 ----------------------------------- */
 
 .maps-section {
-    width: 100%;
+    width:
+        100%;
 
-    margin: 0;
-    padding: 0;
+    margin:
+        0;
+
+    padding:
+        18px 0 0;
+
+    display:
+        flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        center;
+
+    overflow:
+        visible;
 }
 
 
-/* ----------------------------------
-   MAP STAGE
------------------------------------ */
-
 .timelapse-stage {
-    position: relative;
+    position:
+        relative;
 
-    width: 100%;
+    width:
+        100%;
 
     margin:
-        -4px 0 0;
+        0;
 
-    padding: 0;
+    padding:
+        0;
 
-    min-height: 760px;
+    display:
+        flex;
 
-    overflow: visible;
+    align-items:
+        flex-start;
 
-    border: 0;
-    border-radius: 0;
+    justify-content:
+        center;
+
+    overflow:
+        visible;
 
     background:
         transparent;
 }
 
-.timelapse-map {
-    width: 100%;
 
-    margin: 0;
-    padding: 0;
+.timelapse-map {
+    /*
+    Slightly smaller than the full
+    content width so the map always
+    has breathing room around it.
+  */
+
+    width:
+        min(94%,
+            calc((100dvh - 220px) * 1.935));
+
+    /*
+    Don't allow it to collapse
+    too much on normal desktop.
+  */
+
+    min-width:
+        900px;
+
+    max-width:
+        1420px;
+
+    margin:
+        0 auto;
+
+    padding:
+        0;
+
+    display:
+        block;
 }
 
+
 .timelapse-map svg {
-    display: block;
+    display:
+        block;
 
-    width: 100%;
-    max-width: 100%;
+    width:
+        100%;
 
-    height: auto;
+    height:
+        auto;
 
-    margin: 0;
-    padding: 0;
+    max-width:
+        100%;
+
+    margin:
+        0;
+
+    padding:
+        0;
 }
 
 
 /* ----------------------------------
-   MAIN MAP
+   MAP STYLE
 ----------------------------------- */
 
 .timelapse-background {
-    fill: #ffffff;
+    fill:
+        #ffffff;
 }
 
+
 .timelapse-state {
-    fill: #f3f0e8;
+    fill:
+        #f3f0e8;
 
-    stroke: #d6cfbf;
+    stroke:
+        #d6cfbf;
 
-    stroke-width: 0.9;
+    stroke-width:
+        0.9;
 
     vector-effect:
         non-scaling-stroke;
 }
 
+
 .timelapse-marker {
-    fill: #f7b92e;
+    fill:
+        #f7b92e;
 
-    stroke: #ffffff;
+    stroke:
+        #ffffff;
 
-    stroke-width: 1.5;
+    stroke-width:
+        1.5;
 
     vector-effect:
         non-scaling-stroke;
@@ -491,16 +579,20 @@ body {
 ----------------------------------- */
 
 .timelapse-pulse {
-    fill: none;
+    fill:
+        none;
 
-    stroke: #f7b92e;
+    stroke:
+        #f7b92e;
 
-    stroke-width: 2;
+    stroke-width:
+        2;
 
     vector-effect:
         non-scaling-stroke;
 
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
 
@@ -509,46 +601,175 @@ body {
 ----------------------------------- */
 
 .timelapse-international {
-    pointer-events: none;
+    pointer-events:
+        none;
 }
 
+
 .timelapse-inset-country {
-    fill: #f3f0e8;
+    fill:
+        #f3f0e8;
 
-    stroke: #d6cfbf;
+    stroke:
+        #d6cfbf;
 
-    stroke-width: 1;
+    stroke-width:
+        1;
 
     vector-effect:
         non-scaling-stroke;
 }
+
 
 .timelapse-inset-eyebrow {
     font-family:
         "DM Sans",
         sans-serif;
 
-    font-size: 10px;
+    font-size:
+        9px;
 
-    font-weight: 700;
+    font-weight:
+        700;
 
-    letter-spacing: 0.08em;
+    letter-spacing:
+        0.09em;
 
-    text-transform: uppercase;
+    text-transform:
+        uppercase;
 
-    fill: #98a2b3;
+    fill:
+        #98a2b3;
 }
+
 
 .timelapse-inset-title {
     font-family:
         "Fraunces",
         serif;
 
-    font-size: 16px;
+    font-size:
+        14px;
 
-    font-weight: 600;
+    font-weight:
+        600;
 
-    fill: #17212b;
+    fill:
+        #17212b;
+}
+
+
+/* ----------------------------------
+   MEDIUM DESKTOP
+----------------------------------- */
+
+@media (max-width: 1200px) {
+
+    .timelapse-page {
+        padding:
+            18px 24px 20px;
+    }
+
+
+    .timelapse-header {
+        margin-bottom:
+            13px;
+    }
+
+
+    .impact-timeline-row {
+        grid-template-columns:
+            132px minmax(0,
+                1fr);
+
+        gap:
+            24px;
+
+        padding:
+            12px 0 10px;
+    }
+
+
+    .timelapse-header h1 {
+        font-size:
+            clamp(32px,
+                3.5vw,
+                43px);
+    }
+
+
+    .maps-section {
+        padding-top:
+            16px;
+    }
+
+
+    .timelapse-map {
+        width:
+            min(94%,
+                calc((100dvh - 205px) * 1.935));
+
+        min-width:
+            780px;
+    }
+}
+
+
+/* ----------------------------------
+   SHORT DESKTOP
+----------------------------------- */
+
+@media (max-height: 850px) and (min-width: 801px) {
+
+    .timelapse-page {
+        padding-top:
+            14px;
+
+        padding-bottom:
+            14px;
+    }
+
+
+    .timelapse-header {
+        margin-bottom:
+            10px;
+    }
+
+
+    .timelapse-header h1 {
+        font-size:
+            clamp(31px,
+                3.3vw,
+                42px);
+    }
+
+
+    .timelapse-subtitle {
+        margin-top:
+            7px;
+    }
+
+
+    .impact-timeline-row {
+        padding-top:
+            10px;
+
+        padding-bottom:
+            9px;
+    }
+
+
+    .maps-section {
+        padding-top:
+            14px;
+    }
+
+
+    .timelapse-map {
+        width:
+            min(92%,
+                calc((100dvh - 200px) * 1.935));
+    }
 }
 
 
@@ -556,36 +777,42 @@ body {
    TABLET
 ----------------------------------- */
 
-@media (max-width: 1000px) {
+@media (max-width: 800px) {
+
     .timelapse-page {
         padding:
-            28px 20px 36px;
+            16px 16px 18px;
     }
 
-    .timelapse-header {
-        flex-direction:
-            column;
-
-        gap: 16px;
-
-        margin-bottom:
-            24px;
-    }
 
     .timelapse-data-label {
-        align-self:
-            flex-start;
+        display:
+            none;
     }
+
 
     .impact-timeline-row {
         grid-template-columns:
-            170px minmax(0, 1fr);
+            105px minmax(0,
+                1fr);
 
-        gap: 32px;
+        gap:
+            16px;
     }
 
-    .timelapse-stage {
-        min-height: 620px;
+
+    .timelapse-header h1 {
+        font-size:
+            34px;
+    }
+
+
+    .timelapse-map {
+        width:
+            100%;
+
+        min-width:
+            0;
     }
 }
 
@@ -594,84 +821,63 @@ body {
    MOBILE
 ----------------------------------- */
 
-@media (max-width: 640px) {
+@media (max-width: 600px) {
+
     .timelapse-page {
         padding:
-            20px 14px 28px;
+            14px 12px 16px;
     }
 
-    .timelapse-header {
-        margin-bottom:
-            18px;
-    }
-
-    .timelapse-eyebrow {
-        margin-bottom:
-            10px;
-
-        font-size: 10px;
-    }
 
     .timelapse-header h1 {
-        font-size: 38px;
-
-        line-height: 1;
+        font-size:
+            30px;
     }
+
+
+    .timelapse-eyebrow {
+        font-size:
+            8px;
+    }
+
 
     .timelapse-subtitle {
-        margin-top: 12px;
-
-        font-size: 13px;
-
-        line-height: 1.45;
+        font-size:
+            11px;
     }
+
 
     .impact-timeline-row {
         grid-template-columns:
-            1fr;
+            82px minmax(0,
+                1fr);
 
-        gap: 20px;
-
-        padding-top:
-            18px;
-    }
-
-    .timelapse-stat strong {
-        font-size: 32px;
-    }
-
-    .timeline-quarter {
-        font-size: 20px;
-    }
-
-    .timeline-years {
-        font-size: 8px;
-    }
-
-    .community-size-legend {
-        align-items:
-            flex-start;
-
-        flex-direction:
-            column;
-
-        gap: 10px;
-
-        padding-top:
+        gap:
             12px;
     }
 
-    .community-size-items {
-        gap:
-            14px 18px;
+
+    .timelapse-stat strong {
+        font-size:
+            27px;
     }
 
-    .community-size-item {
-        font-size: 10px;
+
+    .timeline-quarter {
+        font-size:
+            17px;
     }
 
-    .timelapse-stage {
-        min-height: 500px;
+
+    .timeline-years {
+        font-size:
+            7px;
+    }
+
+
+    .maps-section {
+        padding-top:
+            12px;
     }
 }
 
@@ -681,62 +887,9 @@ body {
 ----------------------------------- */
 
 @media (prefers-reduced-motion: reduce) {
+
     .timeline-progress {
-        transition: none;
+        transition:
+            none;
     }
-}
-
-.community-legend {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-}
-
-.community-legend-title {
-    margin: 0 0 2px;
-    font-size: 13px;
-    line-height: 1.3;
-    font-weight: 600;
-    color: #667085;
-}
-
-.community-legend-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.legend-dot {
-    display: inline-block;
-    border-radius: 999px;
-    background: #f7b932;
-    border: 1.5px solid #ffffff;
-    flex-shrink: 0;
-}
-
-.legend-dot-small {
-    width: 10px;
-    height: 10px;
-}
-
-.legend-dot-large {
-    width: 16px;
-    height: 16px;
-}
-
-.legend-dot-huge {
-    width: 22px;
-    height: 22px;
-}
-
-.legend-label {
-    font-size: 13px;
-    line-height: 1.3;
-    color: #667085;
-}
-
-.legend-label strong {
-    color: #17212b;
-    font-weight: 600;
 }
